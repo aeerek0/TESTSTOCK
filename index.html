@@ -123,23 +123,54 @@
 
 
     
-    <!-- TAB MENU -->
-    <div class="card mb-3">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <button class="nav-link active" id="tabPortfolioBtn" onclick="switchTab('portfolio')">📊 Portfolio</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="tabDividendBtn" onclick="switchTab('dividend')">💰 Dividend</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="tabSettingsBtn" onclick="switchTab('settings')">⚙️ Settings</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" id="tabAnalyticsBtn" onclick="switchTab('analytics')"> 📈 Analytics</button>
-            </li>
-        </ul>
-    </div>
+<!-- TAB MENU -->
+<div class="card mb-3">
+    <ul class="nav nav-tabs">
+
+        <li class="nav-item">
+            <button class="nav-link active"
+                    id="tabPortfolioBtn"
+                    onclick="switchTab('portfolio')">
+                📊 Portfolio
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    id="tabDividendBtn"
+                    onclick="switchTab('dividend')">
+                💰 Dividend
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    id="tabAnalyticsBtn"
+                    onclick="switchTab('analytics')">
+                📈 Analytics
+            </button>
+        </li>
+
+        <!-- เพิ่มใหม่ -->
+        <li class="nav-item">
+            <button class="nav-link"
+                    id="tabGoalsBtn"
+                    onclick="switchTab('goals')">
+                🎯 Goals
+            </button>
+        </li>
+
+        <!-- เดิม -->
+        <li class="nav-item">
+            <button class="nav-link"
+                    id="tabSettingsBtn"
+                    onclick="switchTab('settings')">
+                ⚙️ Settings
+            </button>
+        </li>
+
+    </ul>
+</div>
 
 <!-- PORTFOLIO TAB CONTENT -->
 <div id="portfolioTab">
