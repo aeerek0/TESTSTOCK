@@ -156,8 +156,223 @@ style="width:0%">
 
 </div>
 
+<!-- Goal Progress -->
+
+<div class="card mt-3 shadow-sm">
+
+    <div class="card-body">
+
+        <h5>
+            📊 Goal Progress
+        </h5>
 
 
+        <div class="row g-3">
+
+
+            <div class="col-12 col-md-6">
+
+                <h6>
+                    💰 Portfolio Progress
+                </h6>
+
+                <p>
+                    มูลค่าปัจจุบัน
+                </p>
+
+                <h4 id="currentPortfolioValue">
+                    0 บาท
+                </h4>
+
+
+                <p>
+                    เป้าหมาย
+                </p>
+
+                <h4 id="targetPortfolioValue">
+                    0 บาท
+                </h4>
+
+
+                <div class="progress">
+
+                    <div
+                    id="goalProgressBar"
+                    class="progress-bar"
+                    style="width:0%">
+                    
+                    </div>
+
+                </div>
+
+
+                <p class="mt-2">
+
+                    ความสำเร็จ
+                    <span id="goalProgressPercent">
+                        0
+                    </span> %
+
+                </p>
+
+
+                <p>
+                    เหลืออีก
+                    <span id="remainingGoal">
+                        0
+                    </span>
+                    บาท
+                </p>
+
+
+            </div>
+
+
+
+            <div class="col-12 col-md-6">
+
+
+                <h6>
+                    💰 Dividend Progress
+                </h6>
+
+
+                <p>
+                    ปันผลปัจจุบันต่อปี
+                </p>
+
+
+                <h4 id="currentDividendValue">
+                    0 บาท
+                </h4>
+
+
+
+                <p>
+                    เป้าหมายปันผล
+                </p>
+
+
+                <h4 id="targetDividendValue">
+                    0 บาท
+                </h4>
+
+
+
+                <div class="progress">
+
+                    <div
+                    id="dividendGoalProgressBar"
+                    class="progress-bar bg-success"
+                    style="width:0%">
+                    
+                    </div>
+
+                </div>
+
+
+                <p class="mt-2">
+
+                    ความสำเร็จ
+                    <span id="dividendGoalPercent">
+                        0
+                    </span> %
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</div>    
+    
+
+
+<!-- Investment Projection -->
+
+<div class="card mt-3 shadow-sm">
+
+
+<div class="card-body">
+
+
+<h5>
+    📈 Investment Projection
+</h5>
+
+
+
+<div class="row g-3">
+
+
+<div class="col-12 col-md-3">
+
+<label>
+เงินลงทุนปัจจุบัน
+</label>
+
+<h5 id="projectionCurrent">
+0 บาท
+</h5>
+
+</div>
+
+
+
+<div class="col-12 col-md-3">
+
+<label>
+ลงทุนเพิ่มต่อเดือน
+</label>
+
+<h5 id="monthlyInvestment">
+0 บาท
+</h5>
+
+</div>
+
+
+
+<div class="col-12 col-md-3">
+
+<label>
+ผลตอบแทนคาดหวัง
+</label>
+
+<h5 id="expectedReturn">
+0 %
+</h5>
+
+</div>
+
+
+
+<div class="col-12 col-md-3">
+
+<label>
+คาดว่าจะถึงเป้าหมาย
+</label>
+
+<h5 id="projectionYear">
+-
+</h5>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
 
 
 <!-- Goal Setting -->
@@ -167,7 +382,7 @@ style="width:0%">
 
 
 <div class="card-body">
-
+    
 
 <h5>
 ⚙️ Goal Setting
