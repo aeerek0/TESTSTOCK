@@ -1,1 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Analytics</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+
+</head>
+
+<body class="p-3">
+
+<div class="container">
+
+<div class="analytics-header mb-3">
+
+    <div>
+        <h3 class="mb-1">
+            📊 Analytics
+        </h3>
+
+        <div class="small">
+            วิเคราะห์ผลการลงทุนและพฤติกรรมการเทรด
+        </div>
+    </div>
+
+
+    <button class="btn btn-light"
+            onclick="loadAnalytics()">
+        🔄 Refresh
+    </button>
+
+</div>
+
+<div class="mb-3">
+<div class="row g-2 mb-3">
+
+    <div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-money">
+    <h6>💵 เงินต้น</h6>
+    <h4 id="netDeposit">0</h4>
+</div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-cost">
+    <h6>📦 ต้นทุนหุ้นปัจจุบัน</h6>
+    <h4 id="currentCost">0</h4>
+</div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-profit">
+    <h6>📈 Realized P/L</h6>
+    <h4 id="realizedPnL">0</h4>
+</div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-win">
+    <h6>🎯 Win Rate</h6>
+    <h4 id="winRate">0%</h4>
+    <small id="winDetail" class="text-muted"></small>
+</div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-stock">
+    <h6>📊 Stock Win Rate</h6>
+    <h4 id="stockWinRate">0%</h4>
+    <small id="stockWinDetail" class="text-muted"></small>
+</div>
+</div>
+
+
+<div class="col-6 col-lg-3">
+<div class="card p-2 h-100 text-center analytics-card analytics-return">
+    <h6>💰 Realized Return</h6>
+    <h4 id="realizedReturn">0%</h4>
+    <small class="text-muted">
+        เทียบเงินต้น
+    </small>
+</div>
+</div>
+
+</div>
+    <!-- Trading Highlights -->
+<div class="card p-2 mb-3 analytics-highlight">
+
+    <h6 class="mb-2">
+        ⭐ Trading Highlights
+    </h6>
+
+
+    <div class="row g-2 text-center">
+
+
+        <div class="col-4">
+
+            <div class="small text-muted">
+                🏆 Best Trade
+            </div>
+
+            <div id="bestTradeSymbol"
+                 class="fw-bold">
+                -
+            </div>
+
+            <small id="bestTradeValue"
+                   class="text-success">
+                -
+            </small>
+
+        </div>
+
+
+
+        <div class="col-4">
+
+            <div class="small text-muted">
+                📉 Worst Trade
+            </div>
+
+            <div id="worstTradeSymbol"
+                 class="fw-bold">
+                -
+            </div>
+
+            <small id="worstTradeValue"
+                   class="text-danger">
+                -
+            </small>
+
+        </div>
+
+
+
+        <div class="col-4">
+
+            <div class="small text-muted">
+                ⏳ Avg Holding
+            </div>
+
+            <div id="avgHoldingDays"
+                 class="fw-bold text-primary">
+                -
+            </div>
+
+            <small>
+                วัน
+            </small>
+
+        </div>
+
+
+    </div>
+
+</div>
+    
+<div class="d-flex justify-content-between align-items-center mb-2">
+
+    <h5 class="mb-0">
+        📈 กำไร / ขาดทุน รายเดือน
+    </h5>
+
+    <select id="pnlYearSelect"
+            class="form-select form-select-sm"
+            style="width:120px"
+            onchange="drawMonthlyPnL()">
+    </select>
+
+</div>
+
+<div style="height:300px;">
+    <canvas id="monthChart"></canvas>
+</div>
+
+</div>
+<div class="card p-3 mb-3">
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+
+    <h5 class="mb-0">
+        💰 มูลค่าซื้อ / ขาย รายเดือน
+    </h5>
+
+    <select id="buySellYearSelect"
+            class="form-select form-select-sm"
+            style="width:120px"
+            onchange="drawBuySellMonthly()">
+    </select>
+
+</div>
+
+<div style="height:300px;">
+    <canvas id="buySellChart"></canvas>
+</div>
+
+</div>
+</div>
+<!-- Top Profit -->
+<div class="card p-3 mb-3">
+
+    <h5>🏆 หุ้นที่กำไรมากที่สุด</h5>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th class="text-end">กำไร</th>
+                </tr>
+            </thead>
+            <tbody id="topProfitTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- Top Loss -->
+<div class="card p-3 mb-3">
+
+    <h5>📉 หุ้นที่ขาดทุนมากที่สุด</h5>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th class="text-end">ขาดทุน</th>
+            </tr>
+        </thead>
+        <tbody id="topLossTable"></tbody>
+    </table>
+
+</div>
+
+<!-- Most Trade -->
+<div class="card p-3 mb-3">
+
+    <h5>🔥 หุ้นที่ซื้อขายบ่อยที่สุด</h5>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th class="text-end">จำนวนครั้ง</th>
+            </tr>
+        </thead>
+        <tbody id="mostTradeTable"></tbody>
+    </table>
+
+</div>
+    <div class="card p-3 mb-3">
+
+    <h5>⏳ ระยะเวลาถือหุ้นเฉลี่ย</h5>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th class="text-end">ถือเฉลี่ย (วัน)</th>
+            </tr>
+        </thead>
+
+        <tbody id="holdingPeriodTable"></tbody>
+
+    </table>
+
+</div>
+
+    <div class="card p-3 mb-3">
+
+    <h5>🏭 กำไร / ขาดทุน แยกตาม Sector</h5>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>Sector</th>
+                <th class="text-end">กำไร / ขาดทุน</th>
+            </tr>
+        </thead>
+
+        <tbody id="sectorPerformanceTable"></tbody>
+
+    </table>
+
+</div>
+
+        <!-- Closed Summary -->
+
+<div class="card p-3 mb-3">
+
+    <h5>📜 Closed Position</h5>
+
+    <!-- Summary -->
+
+    <div class="row g-2 mb-3">
+
+        <div class="col-6 col-md-3">
+            <div class="card p-2 text-center analytics-card" style="background:#eef6ff;">
+                <small class="text-muted">🔒 หุ้นที่ปิดแล้ว</small>
+                <h4 id="closedSummaryCount">0</h4>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card p-2 text-center analytics-card" style="background:#eaf8f2;">
+                <small class="text-muted">📈 Realized P/L</small>
+                <h4 id="closedSummaryRealized">0.00</h4>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card p-2 text-center analytics-card" style="background:#fff5ee;">
+                <small class="text-muted">💰 Dividend</small>
+                <h4 id="closedSummaryDividend">0.00</h4>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card p-2 text-center analytics-card" style="background:#ecfdf5;">
+                <small class="text-muted">🌟 Total Return</small>
+                <h4 id="closedSummaryTotal">0.00</h4>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card p-2 text-center analytics-card" style="background:#f5f3ff;">
+                <small class="text-muted">📊 Average Return</small>
+                <h4 id="closedSummaryAvgReturn">0.00%</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Table -->
+
+    <div class="table-responsive">
+
+        <table class="table table-sm">
+
+            <thead>
+
+                <tr>
+
+                    <th>หุ้น</th>
+                    <th>วันที่ปิด</th>
+                    <th>Realized</th>
+                    <th>Dividend</th>
+                    <th>Total Return</th>
+                    <th>Return %</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="closedPositionTableBody"></tbody>
+
+        </table>
+
+    </div>
+<div class="text-center mt-2">
+    <button id="toggleClosedBtn"
+            class="btn btn-outline-primary btn-sm"
+            onclick="toggleClosedTable()"
+            style="display:none;">
+        ▼ ดูทั้งหมด
+    </button>
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="analytics.js"></script>
+
+</body>
+</html>
