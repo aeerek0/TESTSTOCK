@@ -1853,11 +1853,16 @@ document.getElementById("tabGoalsBtn").classList.remove("active");
 
     }
 
-    // Goals
 if (tab === "goals") {
 
     document.getElementById("goalsTab").style.display = "block";
     document.getElementById("tabGoalsBtn").classList.add("active");
+
+    const frame = document.querySelector("#goalsTab iframe");
+
+    if (frame && frame.contentWindow && typeof frame.contentWindow.loadGoals === "function") {
+        frame.contentWindow.loadGoals();
+    }
 
 }
 
