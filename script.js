@@ -1801,18 +1801,20 @@ document.getElementById("dividendTotalYield").innerText =
 
 function switchTab(tab) {
 
-    // ซ่อนทุกหน้า
-    document.getElementById("portfolioTab").style.display = "none";
-    document.getElementById("dividendTab").style.display = "none";
-    document.getElementById("settingsTab").style.display = "none";
-    document.getElementById("analyticsTab").style.display = "none";
+// ซ่อนทุกหน้า
+document.getElementById("portfolioTab").style.display = "none";
+document.getElementById("dividendTab").style.display = "none";
+document.getElementById("settingsTab").style.display = "none";
+document.getElementById("analyticsTab").style.display = "none";
+document.getElementById("goalsTab").style.display = "none";
 
 
-    // รีเซ็ตสีปุ่ม
-    document.getElementById("tabPortfolioBtn").classList.remove("active");
-    document.getElementById("tabDividendBtn").classList.remove("active");
-    document.getElementById("tabSettingsBtn").classList.remove("active");
-    document.getElementById("tabAnalyticsBtn").classList.remove("active");
+// รีเซ็ตสีปุ่ม
+document.getElementById("tabPortfolioBtn").classList.remove("active");
+document.getElementById("tabDividendBtn").classList.remove("active");
+document.getElementById("tabSettingsBtn").classList.remove("active");
+document.getElementById("tabAnalyticsBtn").classList.remove("active");
+document.getElementById("tabGoalsBtn").classList.remove("active");
 
 
     // Portfolio
@@ -1840,6 +1842,13 @@ function switchTab(tab) {
 
     }
 
+    // Goals
+if (tab === "goals") {
+
+    document.getElementById("goalsTab").style.display = "block";
+    document.getElementById("tabGoalsBtn").classList.add("active");
+
+}
 
     // Settings
     if (tab === "settings") {
