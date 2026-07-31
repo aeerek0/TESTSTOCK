@@ -140,6 +140,11 @@ function loadGoals() {
     const currentPortfolio = Number(localStorage.getItem("currentPortfolioValue")) || 0;
 const currentDividend = Number(localStorage.getItem("currentDividendValue")) || 0;
 
+    alert(
+    "Portfolio = " + localStorage.getItem("currentPortfolioValue") +
+    "\nDividend = " + localStorage.getItem("currentDividendValue")
+);
+
 document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
 document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
 
