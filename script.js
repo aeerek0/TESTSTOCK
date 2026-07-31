@@ -860,6 +860,11 @@ setElementText('dashUnrealizedPnL', (totalUnrealized >= 0 ? '+' : '') + totalUnr
 setElementText('dashTotalStocks', activeStocksCount);
 setElementText('dashDividend', totalDividend.toLocaleString(undefined, { minimumFractionDigits: 2 }));
 
+
+    // แชร์ข้อมูลให้ Goals ใช้งาน
+localStorage.setItem("currentPortfolioValue", totalPortfolioValue);
+localStorage.setItem("currentDividendValue", totalDividend);
+
 // ==========================
 // Total Return
 // ==========================
