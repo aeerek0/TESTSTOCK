@@ -137,6 +137,32 @@ function loadGoals() {
     document.getElementById("dividendGoalValue").innerText =
         formatNumber(goals.dividendGoal);
 
+    const currentPortfolio = Number(localStorage.getItem("currentPortfolioValue")) || 0;
+const currentDividend = Number(localStorage.getItem("currentDividendValue")) || 0;
+
+document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
+document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
+
+document.getElementById("targetPortfolioValue").innerText = formatNumber(goals.portfolioGoal) + " บาท";
+document.getElementById("targetDividendValue").innerText = formatNumber(goals.dividendGoal) + " บาท";
+
+const portfolioPercent = goals.portfolioGoal > 0
+    ? (currentPortfolio / goals.portfolioGoal) * 100
+    : 0;
+
+document.getElementById("goalProgressPercent").innerText = portfolioPercent.toFixed(2);
+document.getElementById("goalProgressBar").style.width = Math.min(portfolioPercent, 100) + "%";
+
+document.getElementById("remainingGoal").innerText =
+    formatNumber(Math.max(goals.portfolioGoal - currentPortfolio, 0));
+
+const dividendPercent = goals.dividendGoal > 0
+    ? (currentDividend / goals.dividendGoal) * 100
+    : 0;
+
+document.getElementById("dividendGoalPercent").innerText = dividendPercent.toFixed(2);
+document.getElementById("dividendGoalProgressBar").style.width = Math.min(dividendPercent, 100) + "%";
+
 }
 
 function formatNumber(value) {
