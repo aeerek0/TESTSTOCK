@@ -861,9 +861,15 @@ setElementText('dashTotalStocks', activeStocksCount);
 setElementText('dashDividend', totalDividend.toLocaleString(undefined, { minimumFractionDigits: 2 }));
 
 
-    // แชร์ข้อมูลให้ Goals ใช้งาน
 localStorage.setItem("currentPortfolioValue", totalPortfolioValue);
 localStorage.setItem("currentDividendValue", totalDividend);
+
+// แจ้ง Goals ให้รีโหลดข้อมูล
+const goalsFrame = document.querySelector("#goalsTab iframe");
+
+if (goalsFrame && goalsFrame.contentWindow && typeof goalsFrame.contentWindow.loadGoals === "function") {
+    goalsFrame.contentWindow.loadGoals();
+}
 
 // ==========================
 // Total Return
