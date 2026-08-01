@@ -1,6 +1,4 @@
-window.onload = function () {
-    loadGoals();
-};
+window.loadGoals = loadGoals;
 
 function saveGoals() {
     const goals = {
