@@ -175,19 +175,19 @@ document.getElementById("goalStatus").innerText = status;
 
 const milestoneList = [
     {
-        name: "🥉 เริ่มต้น",
+        name: "🌱 เริ่มต้น 25%",
         percent: 25
     },
     {
-        name: "🥈 ครึ่งทาง",
+        name: "🚀 ครึ่งทาง 50%",
         percent: 50
     },
     {
-        name: "🥇 ใกล้ถึงเป้าหมาย",
+        name: "🔥 ช่วงเร่งเครื่อง 75%",
         percent: 75
     },
     {
-        name: "🏆 เป้าหมายสำเร็จ",
+        name: "🏆 Freedom Goal 100%",
         percent: 100
     }
 ];
@@ -241,10 +241,17 @@ milestoneList.forEach(m => {
         </div>
 
 
-        <small>
-            ${completed ? "✅ สำเร็จแล้ว" : 
-            "กำลังเดินทาง " + progress.toFixed(1) + "%"}
-        </small>
+<small>
+${
+completed 
+? "✅ สำเร็จแล้ว"
+: 
+"กำลังเดินทาง " + progress.toFixed(1) + 
+"% | เหลืออีก " +
+formatNumber(Math.max(targetAmount - currentPortfolio,0)) +
+" บาท"
+}
+</small>
 
     </div>
 
