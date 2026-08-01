@@ -792,22 +792,22 @@
 }
 
 .goal-card .card-body {
-    padding: 25px;
+    padding: 16px;
 }
 
 .goal-title {
-    font-size: 14px;
+    font-size: 13px;
     color: #6c757d;
 }
 
 .goal-number {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 700;
-    margin-top: 8px;
+    margin-top: 5px;
 }
 
 .goal-sub {
-    font-size: 14px;
+    font-size: 13px;
     color: #6c757d;
 }
 
@@ -820,7 +820,7 @@
 }
 
 .progress {
-    height: 10px;
+    height: 8px;
     border-radius: 20px;
 }
 
