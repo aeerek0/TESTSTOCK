@@ -140,11 +140,15 @@ if (target > current && monthly > 0) {
         targetYear - new Date().getFullYear();
 
 
-    document.getElementById("goalTargetYear").innerText =
-        targetYear;
+const goalYearEl = document.getElementById("goalTargetYear");
+if (goalYearEl) {
+    goalYearEl.innerText = targetYear;
+}
 
-    document.getElementById("goalRemainYear").innerText =
-        remainYears;
+const remainYearEl = document.getElementById("goalRemainYear");
+if (remainYearEl) {
+    remainYearEl.innerText = remainYears;
+}
 
 
     // 📈 Investment Plan
