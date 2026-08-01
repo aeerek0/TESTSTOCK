@@ -141,22 +141,33 @@ renderSmartTips(
         document.getElementById("projectionYear").innerText = goals.targetYear || "-";
     }
 
-    // =========================
+// =========================
 // Goal Health
 // =========================
 
-document.getElementById("healthCurrentPortfolio").innerText =
-    formatNumber(currentPortfolio);
+const healthCurrentPortfolioEl =
+    document.getElementById("healthCurrentPortfolio");
 
-document.getElementById("healthTargetPortfolio").innerText =
-    formatNumber(goals.portfolioGoal);
+if (healthCurrentPortfolioEl) {
+    healthCurrentPortfolioEl.innerText =
+        formatNumber(currentPortfolio);
+}
+
+
+const healthTargetPortfolioEl =
+    document.getElementById("healthTargetPortfolio");
+
+if (healthTargetPortfolioEl) {
+    healthTargetPortfolioEl.innerText =
+        formatNumber(goals.portfolioGoal);
+}
 
 
 let projectionYear =
     document.getElementById("projectionYear").innerText;
 
 
-// ปีเป้าหมายที่ผู้ใช้ตั้ง
+// ปีเป้าหมาย
 const healthTargetYearEl =
     document.getElementById("healthTargetYear");
 
@@ -166,7 +177,7 @@ if (healthTargetYearEl) {
 }
 
 
-// ปีที่ระบบคำนวณ
+// ปีคาดการณ์
 const healthProjectionYearEl =
     document.getElementById("healthProjectionYear");
 
@@ -176,29 +187,38 @@ if (healthProjectionYearEl) {
 }
 
 
-const currentYear = new Date().getFullYear();
+// เหลือกี่ปี
+const healthRemainYearEl =
+    document.getElementById("healthRemainYear");
 
-if (projectionYear !== "-") {
+if (healthRemainYearEl && projectionYear !== "-") {
 
-    const remainYear = Number(projectionYear) - currentYear;
+    const remainYear =
+        Number(projectionYear) - new Date().getFullYear();
 
-    document.getElementById("healthRemainYear").innerText =
+    healthRemainYearEl.innerText =
         remainYear > 0 ? remainYear : 0;
-
 }
 
 
-let status = "🟢 อยู่ในแผน";
+// Status
+const goalStatusEl =
+    document.getElementById("goalStatus");
 
-if (
-    goals.targetYear &&
-    projectionYear !== "-" &&
-    Number(projectionYear) > Number(goals.targetYear)
-) {
-    status = "🟡 ต้องเร่งเพิ่ม";
+if(goalStatusEl){
+
+    let status = "🟢 อยู่ในแผน";
+
+    if (
+        goals.targetYear &&
+        projectionYear !== "-" &&
+        Number(projectionYear) > Number(goals.targetYear)
+    ) {
+        status = "🟡 ต้องเร่งเพิ่ม";
+    }
+
+    goalStatusEl.innerText = status;
 }
-
-document.getElementById("goalStatus").innerText = status;
 
     // =========================
 // Investment Milestone
