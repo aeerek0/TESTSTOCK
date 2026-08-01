@@ -400,20 +400,37 @@ function renderSmartTips(
 
 
     // เร่งเป้าหมาย
+// เร่งเป้าหมาย (คำนวณจริง)
 
-    if(monthly > 0){
+if (monthly > 0 && target > currentPortfolio) {
 
-        tips += `
-        <div class="mb-3">
-            🚀 <b>เร่งเป้าหมาย</b><br>
-            หากเพิ่มเงินลงทุนอีก 
-            <b>1,000 บาท/เดือน</b><br>
-            จะช่วยให้ถึงเป้าหมายเร็วขึ้น
-        </div>
-        `;
+    const targetYear = new Date().getFullYear() + 1;
+
+    let testMonthly = monthly;
+    let value = currentPortfolio;
+    let years = 0;
+
+    while (value < target && years < 50) {
+
+        value = value * (1 + 0.08);
+        value += testMonthly * 12;
+
+        years++;
 
     }
 
+
+    tips += `
+    <div class="mb-3">
+        🚀 <b>เร่งเป้าหมาย</b><br>
+        แผนปัจจุบันลงทุน 
+        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
+        คาดว่าจะถึงเป้าหมายประมาณ 
+        <b>${years} ปี</b>
+    </div>
+    `;
+
+}
 
     // Dividend
 
