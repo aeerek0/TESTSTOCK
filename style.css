@@ -1080,7 +1080,118 @@
     );
 
 }
+/* =========================
+   Goal Coach Recommendation
+========================= */
 
+.goal-coach-card {
+
+    margin-top:15px;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:linear-gradient(
+        135deg,
+        #fff3cd,
+        #fffaf0
+    );
+
+    border-left:6px solid #f4a261;
+
+    box-shadow:
+    0 4px 12px rgba(244,162,97,.18);
+
+}
+
+
+.goal-coach-title {
+
+    font-size:18px;
+
+    font-weight:800;
+
+    color:#6e3b23;
+
+    margin-bottom:12px;
+
+}
+
+
+.goal-coach-alert {
+
+    background:#fff8e1;
+
+    color:#856404;
+
+    padding:10px 12px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+    margin-bottom:15px;
+
+}
+
+
+.coach-box {
+
+    background:#ffffff;
+
+    border-radius:14px;
+
+    padding:12px;
+
+    text-align:center;
+
+    border:1px solid #f0e6df;
+
+}
+
+
+.coach-box.current strong {
+
+    color:#6c757d;
+
+}
+
+
+.coach-box.recommend {
+
+    background:#e8f5e9;
+
+    border:1px solid #b7e4c7;
+
+}
+
+
+.coach-box.recommend strong {
+
+    color:#198754;
+
+}
+
+
+.coach-extra {
+
+    margin-top:15px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    color:#d97706;
+
+}
+
+
+.coach-extra b {
+
+    font-size:22px;
+
+}
 
 .goal-progress-card #dividendGoalProgressBar {
 
