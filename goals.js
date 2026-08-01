@@ -1,340 +1,953 @@
 window.loadGoals = loadGoals;
 
+
+
 function saveGoals() {
+
     const goals = {
+
         portfolioGoal: Number(document.getElementById("inputPortfolioGoal").value) || 0,
+
         dividendGoal: Number(document.getElementById("inputDividendGoal").value) || 0,
+
         monthlyInvestment: Number(document.getElementById("inputMonthlyInvestment").value) || 0,
+
         expectedReturn: Number(document.getElementById("inputExpectedReturn").value) || 8,
+
         targetYear: document.getElementById("inputTargetYear").value
+
     };
 
+
+
     localStorage.setItem(
+
         "investmentGoals",
+
         JSON.stringify(goals)
+
     );
+
+
 
     alert("✅ บันทึกเป้าหมายเรียบร้อย");
+
     loadGoals();
+
 }
 
+
+
 function loadGoals() {
+
     const goals = JSON.parse(
+
         localStorage.getItem("investmentGoals")
+
     );
+
+
 
     if (!goals) return;
 
+
+
     document.getElementById("inputPortfolioGoal").value =
+
         goals.portfolioGoal || "";
 
+
+
     document.getElementById("inputDividendGoal").value =
+
         goals.dividendGoal || "";
 
+
+
     document.getElementById("inputMonthlyInvestment").value =
+
         goals.monthlyInvestment || "";
 
+
+
     document.getElementById("inputExpectedReturn").value =
+
         goals.expectedReturn || 8;
 
+
+
     document.getElementById("inputTargetYear").value =
+
         goals.targetYear || "";
 
+
+
     document.getElementById("portfolioGoalValue").innerText =
+
         formatNumber(goals.portfolioGoal);
+
+
 
     document.getElementById("dividendGoalValue").innerText =
+
         formatNumber(goals.dividendGoal);
 
+
+
     const currentPortfolio = Number(localStorage.getItem("currentPortfolioValue")) || 0;
+
     const currentDividend = Number(localStorage.getItem("currentDividendValue")) || 0;
 
+
+
     renderProjectionChart(
-        currentPortfolio,
-        goals.portfolioGoal,
-        goals.monthlyInvestment,
-        goals.expectedReturn
-    );
+
+    currentPortfolio,
+
+    goals.portfolioGoal,
+
+    goals.monthlyInvestment,
+
+    goals.expectedReturn
+
+);
+
+
 
     renderSmartTips(
-        currentPortfolio,
-        goals.portfolioGoal,
-        goals.monthlyInvestment,
-        currentDividend
-    );
+
+    currentPortfolio,
+
+    goals.portfolioGoal,
+
+    goals.monthlyInvestment,
+
+    currentDividend
+
+);
+
+
 
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
+
     document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
 
+
+
     document.getElementById("targetPortfolioValue").innerText = formatNumber(goals.portfolioGoal) + " บาท";
+
     document.getElementById("targetDividendValue").innerText = formatNumber(goals.dividendGoal) + " บาท";
 
+
+
     const portfolioPercent = goals.portfolioGoal > 0
+
         ? (currentPortfolio / goals.portfolioGoal) * 100
+
         : 0;
+
+
 
     document.getElementById("goalProgressPercent").innerText = portfolioPercent.toFixed(2);
+
     document.getElementById("goalProgressBar").style.width = Math.min(portfolioPercent, 100) + "%";
 
+
+
     document.getElementById("remainingGoal").innerText =
+
         formatNumber(Math.max(goals.portfolioGoal - currentPortfolio, 0));
 
+
+
+    // ตรวจสอบว่ามี Element นี้อยู่ใน HTML หรือไม่ ป้องกัน Error กรณีไม่มี ID นี้
+
     const portfolioPercentEl = document.getElementById("portfolioPercent");
+
     if (portfolioPercentEl) {
+
         portfolioPercentEl.innerText = portfolioPercent.toFixed(2);
+
     }
+
+
 
     document.getElementById("portfolioProgress").style.width =
+
         Math.min(portfolioPercent, 100) + "%";
 
+
+
     const dividendPercent = goals.dividendGoal > 0
+
         ? (currentDividend / goals.dividendGoal) * 100
+
         : 0;
 
+
+
     document.getElementById("dividendGoalPercent").innerText = dividendPercent.toFixed(2);
+
     document.getElementById("dividendGoalProgressBar").style.width = Math.min(dividendPercent, 100) + "%";
 
+
+
+    // ตรวจสอบว่ามี Element นี้อยู่ใน HTML หรือไม่ ป้องกัน Error กรณีไม่มี ID นี้
+
     const dividendPercentEl = document.getElementById("dividendPercent");
+
     if (dividendPercentEl) {
+
         dividendPercentEl.innerText = dividendPercent.toFixed(2);
+
     }
+
+
 
     document.getElementById("dividendProgress").style.width =
+
         Math.min(dividendPercent, 100) + "%";
 
+
+
     document.getElementById("projectionCurrent").innerText =
+
         formatNumber(currentPortfolio) + " บาท";
 
+
+
     document.getElementById("projectionMonthlyInvestment").innerText =
+
         formatNumber(goals.monthlyInvestment) + " บาท";
 
+
+
     document.getElementById("projectionExpectedReturn").innerText =
+
         goals.expectedReturn + " %";
 
+
+
     const target = Number(goals.portfolioGoal);
+
     const current = currentPortfolio;
+
     const monthly = Number(goals.monthlyInvestment);
+
     const annualReturn = Number(goals.expectedReturn) / 100;
 
-    let finishYear = "-";
-    let remainYears = 0;
 
-    if (target > current && monthly > 0) {
-        let value = current;
-        let months = 0;
 
-        while (value < target && months < 1000) {
-            value = value * (1 + annualReturn / 12);
-            value += monthly;
-            months++;
-        }
+if (target > current && monthly > 0) {
 
-        const finishDate = new Date();
-        finishDate.setMonth(finishDate.getMonth() + months);
 
-        finishYear = finishDate.getFullYear();
-        const currentYear = new Date().getFullYear();
-        remainYears = Math.max(finishYear - currentYear, 0);
 
-        document.getElementById("projectionYear").innerText =
-            remainYears + " ปี";
-    } else {
-        finishYear = goals.targetYear || "-";
-        document.getElementById("projectionYear").innerText = finishYear;
+    let value = current;
+
+    let months = 0;
+
+
+
+    while (value < target && months < 1000) {
+
+        value = value * (1 + annualReturn / 12);
+
+        value += monthly;
+
+        months++;
+
     }
 
-    // 🎯 Goal Status (รวมจุดที่ซ้ำซ้อนให้กระชับและปลอดภัยไม่ให้เกิด Error)
-    const goalTargetYearEl = document.getElementById("goalTargetYear");
-    if (goalTargetYearEl) {
-        goalTargetYearEl.innerText = finishYear;
-    }
 
-    const goalRemainYearEl = document.getElementById("goalRemainYear");
-    if (goalRemainYearEl) {
-        goalRemainYearEl.innerText = remainYears;
-    }
 
-    // =========================
-    // Goal Health
-    // =========================
+    const finishDate = new Date();
 
-    document.getElementById("healthCurrentPortfolio").innerText =
-        formatNumber(currentPortfolio);
+    finishDate.setMonth(finishDate.getMonth() + months);
 
-    document.getElementById("healthTargetPortfolio").innerText =
-        formatNumber(goals.portfolioGoal);
 
-    let projectionYearText = document.getElementById("projectionYear").innerText;
 
-    document.getElementById("healthProjectionYear").innerText =
-        projectionYearText;
 
-    const currentYear = new Date().getFullYear();
 
-    if (projectionYearText !== "-") {
-        const matchedYears = parseInt(projectionYearText);
-        const remainYear = !isNaN(matchedYears) ? matchedYears : 0;
+    // 🎯 Goal Status
 
-        document.getElementById("healthRemainYear").innerText =
-            remainYear > 0 ? remainYear : 0;
-    }
+const finishYear = finishDate.getFullYear();
 
-    let status = "🟢 อยู่ในแผน";
 
-    if (goals.targetYear && projectionYearText !== "-") {
-        const matchedYears = parseInt(projectionYearText);
-        if (!isNaN(matchedYears) && (currentYear + matchedYears) > Number(goals.targetYear)) {
-            status = "🟡 ต้องเร่งเพิ่ม";
-        }
-    }
 
-    document.getElementById("goalStatus").innerText = status;
+const currentYear = new Date().getFullYear();
 
-    // =========================
-    // Investment Milestone
-    // =========================
 
-    const milestoneList = [
-        { name: "🌱 เริ่มต้น 25%", percent: 25 },
-        { name: "🚀 ครึ่งทาง 50%", percent: 50 },
-        { name: "🔥 ช่วงเร่งเครื่อง 75%", percent: 75 },
-        { name: "🏆 Freedom Goal 100%", percent: 100 }
-    ];
 
-    let milestoneHTML = "";
+const remainYears = Math.max(finishYear - currentYear, 0);
 
-    milestoneList.forEach(m => {
-        const targetAmount = goals.portfolioGoal * (m.percent / 100);
-        const progress = Math.min((currentPortfolio / targetAmount) * 100, 100);
-        const completed = currentPortfolio >= targetAmount;
 
-        milestoneHTML += `
-        <div class="mb-3">
-            <div class="d-flex justify-content-between">
-                <span>${m.name}</span>
-                <span>${formatNumber(targetAmount)} บาท</span>
-            </div>
-            <div class="progress">
-                <div class="progress-bar ${completed ? 'bg-success' : ''}" style="width:${progress}%"></div>
-            </div>
-            <small>
-            ${
-                completed 
-                ? "✅ สำเร็จแล้ว" 
-                : "กำลังเดินทาง " + progress.toFixed(1) + "% | เหลืออีก " + formatNumber(Math.max(targetAmount - currentPortfolio, 0)) + " บาท"
-            }
-            </small>
-        </div>
-        `;
-    });
 
-    document.getElementById("milestoneContainer").innerHTML = milestoneHTML;
+
+
+const goalTargetYearEl = document.getElementById("goalTargetYear");
+
+if (goalTargetYearEl) {
+
+    goalTargetYearEl.innerText = finishYear;
+
 }
+
+
+
+const goalRemainYearEl = document.getElementById("goalRemainYear");
+
+if (goalRemainYearEl) {
+
+    goalRemainYearEl.innerText = remainYears;
+
+}
+
+
+
+
+
+const goalYearEl = document.getElementById("goalTargetYear");
+
+if (goalYearEl) {
+
+    goalYearEl.innerText = targetYear;
+
+}
+
+
+
+const remainYearEl = document.getElementById("goalRemainYear");
+
+if (remainYearEl) {
+
+    remainYearEl.innerText = remainYears;
+
+}
+
+
+
+
+
+    // 📈 Investment Plan
+
+    document.getElementById("projectionYear").innerText =
+
+        remainYears + " ปี";
+
+
+
+
+
+} else {
+
+
+
+    document.getElementById("projectionYear").innerText =
+
+        goals.targetYear || "-";
+
+
+
+}
+
+
+
+    // =========================
+
+// Goal Health
+
+// =========================
+
+
+
+document.getElementById("healthCurrentPortfolio").innerText =
+
+    formatNumber(currentPortfolio);
+
+
+
+document.getElementById("healthTargetPortfolio").innerText =
+
+    formatNumber(goals.portfolioGoal);
+
+
+
+
+
+let projectionYear = document.getElementById("projectionYear").innerText;
+
+
+
+document.getElementById("healthProjectionYear").innerText =
+
+    projectionYear;
+
+
+
+
+
+const currentYear = new Date().getFullYear();
+
+
+
+if (projectionYear !== "-") {
+
+
+
+    const remainYear = Number(projectionYear) - currentYear;
+
+
+
+    document.getElementById("healthRemainYear").innerText =
+
+        remainYear > 0 ? remainYear : 0;
+
+
+
+}
+
+
+
+
+
+let status = "🟢 อยู่ในแผน";
+
+
+
+
+
+if (goals.targetYear && projectionYear !== "-") {
+
+
+
+    if (Number(projectionYear) > Number(goals.targetYear)) {
+
+
+
+        status = "🟡 ต้องเร่งเพิ่ม";
+
+
+
+    }
+
+
+
+}
+
+
+
+
+
+document.getElementById("goalStatus").innerText = status;
+
+
+
+    // =========================
+
+// Investment Milestone
+
+// =========================
+
+
+
+const milestoneList = [
+
+    {
+
+        name: "🌱 เริ่มต้น 25%",
+
+        percent: 25
+
+    },
+
+    {
+
+        name: "🚀 ครึ่งทาง 50%",
+
+        percent: 50
+
+    },
+
+    {
+
+        name: "🔥 ช่วงเร่งเครื่อง 75%",
+
+        percent: 75
+
+    },
+
+    {
+
+        name: "🏆 Freedom Goal 100%",
+
+        percent: 100
+
+    }
+
+];
+
+
+
+
+
+let milestoneHTML = "";
+
+
+
+
+
+milestoneList.forEach(m => {
+
+
+
+    const targetAmount =
+
+        goals.portfolioGoal * (m.percent / 100);
+
+
+
+
+
+    const progress =
+
+        Math.min(
+
+            (currentPortfolio / targetAmount) * 100,
+
+            100
+
+        );
+
+
+
+
+
+    const completed =
+
+        currentPortfolio >= targetAmount;
+
+
+
+
+
+    milestoneHTML += `
+
+
+
+    <div class="mb-3">
+
+
+
+        <div class="d-flex justify-content-between">
+
+
+
+            <span>
+
+                ${m.name}
+
+            </span>
+
+
+
+            <span>
+
+                ${formatNumber(targetAmount)} บาท
+
+            </span>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="progress">
+
+
+
+            <div 
+
+            class="progress-bar ${completed ? 'bg-success' : ''}"
+
+            style="width:${progress}%">
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+<small>
+
+${
+
+completed 
+
+? "✅ สำเร็จแล้ว"
+
+: 
+
+"กำลังเดินทาง " + progress.toFixed(1) + 
+
+"% | เหลืออีก " +
+
+formatNumber(Math.max(targetAmount - currentPortfolio,0)) +
+
+" บาท"
+
+}
+
+</small>
+
+
+
+    </div>
+
+
+
+    `;
+
+
+
+});
+
+
+
+
+
+document.getElementById("milestoneContainer").innerHTML =
+
+    milestoneHTML;
+
+}
+
+
 
 function formatNumber(value) {
+
     return Number(value || 0).toLocaleString("en-US");
+
 }
 
+
+
 function renderProjectionChart(current, target, monthly, rate) {
+
+
+
     const ctx = document.getElementById("projectionChart");
+
+
 
     if (!ctx) return;
 
+
+
+
+
     let labels = [];
+
     let projected = [];
+
     let targetLine = [];
 
+
+
+
+
     let value = current;
+
     let year = new Date().getFullYear();
 
+
+
+
+
     for (let i = 0; i <= 10; i++) {
+
+
+
         labels.push(year + i);
+
+
+
+
+
         projected.push(Math.round(value));
+
+
+
         targetLine.push(target);
 
+
+
+
+
+        // คำนวณปีถัดไป
+
         value = value * (1 + rate / 100);
+
         value += monthly * 12;
+
+
+
     }
 
-    // ป้องกันกราฟซ้อนทับกันเวลาเรียกฟังก์ชันซ้ำ
-    if (window.myProjectionChart instanceof Chart) {
-        window.myProjectionChart.destroy();
-    }
 
-    window.myProjectionChart = new Chart(ctx, {
+
+
+
+    new Chart(ctx, {
+
+
+
         type: "line",
+
+
+
         data: {
+
+
+
             labels: labels,
+
+
+
             datasets: [
+
+
+
                 {
+
                     label: "📈 พอร์ตคาดการณ์",
+
                     data: projected,
+
                     tension: 0.3
+
                 },
+
+
+
                 {
+
                     label: "🎯 เป้าหมาย",
+
                     data: targetLine,
-                    borderDash: [5, 5],
-                    tension: 0
+
+                    borderDash: [5,5],
+
+                    tension:0
+
                 }
+
+
+
             ]
+
+
+
         },
+
+
+
+
+
         options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: "bottom"
+
+
+
+            responsive:true,
+
+
+
+            plugins:{
+
+                legend:{
+
+                    position:"bottom"
+
                 }
+
             },
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return value.toLocaleString() + " บาท";
+
+
+
+            scales:{
+
+
+
+                y:{
+
+                    ticks:{
+
+                        callback:function(value){
+
+                            return value.toLocaleString()+" บาท";
+
                         }
+
                     }
+
                 }
+
+
+
             }
+
+
+
         }
+
+
+
     });
+
+
+
 }
 
-function renderSmartTips(currentPortfolio, target, monthly, dividend) {
+
+
+function renderSmartTips(
+
+    currentPortfolio,
+
+    target,
+
+    monthly,
+
+    dividend
+
+){
+
+
+
     const box = document.getElementById("smartTips");
 
-    if (!box) return;
+
+
+    if(!box) return;
+
+
+
+
 
     let tips = "";
 
+
+
+
+
+    // แผนปัจจุบัน
+
+
+
     tips += `
+
     <div class="mb-3">
+
         📌 <b>แผนปัจจุบัน</b><br>
-        ลงทุนเพิ่ม <b>${formatNumber(monthly)} บาท/เดือน</b><br>
-        พอร์ตปัจจุบัน <b>${formatNumber(currentPortfolio)} บาท</b>
+
+        ลงทุนเพิ่ม 
+
+        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
+
+        พอร์ตปัจจุบัน 
+
+        <b>${formatNumber(currentPortfolio)} บาท</b>
+
     </div>
+
     `;
 
-    if (monthly > 0) {
+
+
+
+
+    // เร่งเป้าหมาย
+
+
+
+    if(monthly > 0){
+
+
+
         tips += `
+
         <div class="mb-3">
+
             🚀 <b>เร่งเป้าหมาย</b><br>
-            หากเพิ่มเงินลงทุนอีก <b>1,000 บาท/เดือน</b><br>
+
+            หากเพิ่มเงินลงทุนอีก 
+
+            <b>1,000 บาท/เดือน</b><br>
+
             จะช่วยให้ถึงเป้าหมายเร็วขึ้น
+
         </div>
+
         `;
+
+
+
     }
 
-    const monthlyDividend = dividend / 12;
+
+
+
+
+    // Dividend
+
+
+
+    const monthlyDividend =
+
+        dividend / 12;
+
+
+
+
 
     tips += `
+
     <div>
+
         💰 <b>Passive Income</b><br>
-        ปันผลปัจจุบัน <b>${formatNumber(dividend)} บาท/ปี</b><br>
-        เฉลี่ย <b>${formatNumber(monthlyDividend)} บาท/เดือน</b>
+
+        ปันผลปัจจุบัน 
+
+        <b>${formatNumber(dividend)} บาท/ปี</b><br>
+
+        เฉลี่ย 
+
+        <b>${formatNumber(monthlyDividend)} บาท/เดือน</b>
+
     </div>
+
     `;
 
+
+
+
+
     box.innerHTML = tips;
+
+
+
 }
 
+
+
 window.loadGoals = loadGoals;
+
+
