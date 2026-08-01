@@ -149,10 +149,28 @@ document.getElementById("healthTargetPortfolio").innerText =
     formatNumber(goals.portfolioGoal);
 
 
-let projectionYear = document.getElementById("projectionYear").innerText;
+let projectionYear =
+    document.getElementById("projectionYear").innerText;
 
-document.getElementById("healthProjectionYear").innerText =
-    projectionYear;
+
+// ปีเป้าหมายที่ผู้ใช้ตั้ง
+const healthTargetYearEl =
+    document.getElementById("healthTargetYear");
+
+if (healthTargetYearEl) {
+    healthTargetYearEl.innerText =
+        goals.targetYear || "-";
+}
+
+
+// ปีที่ระบบคำนวณ
+const healthProjectionYearEl =
+    document.getElementById("healthProjectionYear");
+
+if (healthProjectionYearEl) {
+    healthProjectionYearEl.innerText =
+        projectionYear;
+}
 
 
 const currentYear = new Date().getFullYear();
@@ -169,17 +187,13 @@ if (projectionYear !== "-") {
 
 let status = "🟢 อยู่ในแผน";
 
-
-if (goals.targetYear && projectionYear !== "-") {
-
-    if (Number(projectionYear) > Number(goals.targetYear)) {
-
-        status = "🟡 ต้องเร่งเพิ่ม";
-
-    }
-
+if (
+    goals.targetYear &&
+    projectionYear !== "-" &&
+    Number(projectionYear) > Number(goals.targetYear)
+) {
+    status = "🟡 ต้องเร่งเพิ่ม";
 }
-
 
 document.getElementById("goalStatus").innerText = status;
 
