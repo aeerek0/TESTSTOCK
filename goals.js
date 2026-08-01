@@ -596,7 +596,6 @@ function renderSmartTips(
     // =========================
 // Extra Investment Suggestion
 // =========================
-
 let extraTip = "";
 
 
@@ -644,7 +643,109 @@ if(targetYear){
 
         if(extra > 0){
 
-extraTip = `
+            extraTip = `
+
+            <div class="goal-coach-card">
+
+                <div class="goal-coach-title">
+                    🤖 Goal Coach Recommendation
+                </div>
+
+
+                <div class="goal-coach-alert">
+
+                    ⚠️ แผนปัจจุบันยังไม่ทันเป้าหมายปี 
+                    ${targetYear}
+
+                </div>
+
+
+                <div class="coach-plan-row">
+
+                    <div class="coach-box current">
+
+                        <small>
+                        ลงทุนปัจจุบัน
+                        </small>
+
+                        <strong>
+                        ${formatNumber(monthly)}
+                        </strong>
+
+                        <span>
+                        บาท/เดือน
+                        </span>
+
+                    </div>
+
+
+                    <div class="coach-arrow">
+                    ➜
+                    </div>
+
+
+                    <div class="coach-box recommend">
+
+                        <small>
+                        แนะนำ
+                        </small>
+
+                        <strong>
+                        ${formatNumber(requiredMonthly)}
+                        </strong>
+
+                        <span>
+                        บาท/เดือน
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="coach-extra">
+
+                    🚀 ต้องเพิ่ม
+
+                    <b>
+                    +${formatNumber(extra)}
+                    บาท/เดือน
+                    </b>
+
+                </div>
+
+
+            </div>
+
+            `;
+
+
+        }else{
+
+
+            extraTip = `
+
+            <div class="goal-coach-card success">
+
+                🤖 Goal Coach Recommendation
+
+                <br><br>
+
+                ✅ แผนปัจจุบันสามารถถึงเป้าหมายปี ${targetYear}
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+}
+
+
+tips += extraTip;
 
 <div class="mb-3">
 
