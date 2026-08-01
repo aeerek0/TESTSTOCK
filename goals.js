@@ -131,15 +131,7 @@ function loadGoals() {
         document.getElementById("projectionYear").innerText = finishYear;
     }
 
-    // 🎯 Goal Status (รวมจุดที่ซ้ำซ้อนให้กระชับและปลอดภัยไม่ให้เกิด Error)
-    const goalTargetYearEl = document.getElementById("goalTargetYear");
-    if (goalTargetYearEl) {
-        goalTargetYearEl.innerText = finishYear;
-    }
 
-    const goalRemainYearEl = document.getElementById("goalRemainYear");
-    if (goalRemainYearEl) {
-        goalRemainYearEl.innerText = remainYears;
     }
 
     // =========================
@@ -154,8 +146,7 @@ function loadGoals() {
 
     let projectionYearText = document.getElementById("projectionYear").innerText;
 
-    document.getElementById("healthProjectionYear").innerText =
-        projectionYearText;
+
 
     const currentYear = new Date().getFullYear();
 
@@ -163,8 +154,7 @@ function loadGoals() {
         const matchedYears = parseInt(projectionYearText);
         const remainYear = !isNaN(matchedYears) ? matchedYears : 0;
 
-        document.getElementById("healthRemainYear").innerText =
-            remainYear > 0 ? remainYear : 0;
+
     }
 
     let status = "🟢 อยู่ในแผน";
