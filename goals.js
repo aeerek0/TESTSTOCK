@@ -563,22 +563,27 @@ if(targetYear){
 
         if(extra > 0){
 
-            extraTip = `
+extraTip = `
 
-            <div class="mb-3">
+<div class="mb-3">
 
-            🚀 <b>คำแนะนำเพิ่ม</b><br>
+🚀 <b>คำแนะนำเพิ่ม</b><br>
 
-            ถ้าต้องการให้ถึงเป้าหมายปี 
-            <b>${targetYear}</b><br>
+ปัจจุบันลงทุน 
+<b>${formatNumber(monthly)} บาท/เดือน</b><br>
 
-            ควรเพิ่มลงทุนประมาณ
+ถ้าต้องการให้ถึงเป้าหมายปี 
+<b>${targetYear}</b><br>
 
-            <b>${formatNumber(extra)} บาท/เดือน</b>
+แนะนำเพิ่มอีก 
+<b>${formatNumber(extra)} บาท/เดือน</b><br>
 
-            </div>
+รวมเป็นประมาณ 
+<b>${formatNumber(monthly + extra)} บาท/เดือน</b>
 
-            `;
+</div>
+
+`;
 
         }else{
 
