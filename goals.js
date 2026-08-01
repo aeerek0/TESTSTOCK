@@ -56,6 +56,13 @@ function loadGoals() {
     goals.expectedReturn
 );
 
+    renderSmartTips(
+    currentPortfolio,
+    goals.portfolioGoal,
+    goals.monthlyInvestment,
+    currentDividend
+);
+
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
     document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
 
@@ -361,6 +368,71 @@ function renderProjectionChart(current, target, monthly, rate) {
         }
 
     });
+
+}
+
+function renderSmartTips(
+    currentPortfolio,
+    target,
+    monthly,
+    dividend
+){
+
+    const box = document.getElementById("smartTips");
+
+    if(!box) return;
+
+
+    let tips = "";
+
+
+    // แผนปัจจุบัน
+
+    tips += `
+    <div class="mb-3">
+        📌 <b>แผนปัจจุบัน</b><br>
+        ลงทุนเพิ่ม 
+        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
+        พอร์ตปัจจุบัน 
+        <b>${formatNumber(currentPortfolio)} บาท</b>
+    </div>
+    `;
+
+
+    // เร่งเป้าหมาย
+
+    if(monthly > 0){
+
+        tips += `
+        <div class="mb-3">
+            🚀 <b>เร่งเป้าหมาย</b><br>
+            หากเพิ่มเงินลงทุนอีก 
+            <b>1,000 บาท/เดือน</b><br>
+            จะช่วยให้ถึงเป้าหมายเร็วขึ้น
+        </div>
+        `;
+
+    }
+
+
+    // Dividend
+
+    const monthlyDividend =
+        dividend / 12;
+
+
+    tips += `
+    <div>
+        💰 <b>Passive Income</b><br>
+        ปันผลปัจจุบัน 
+        <b>${formatNumber(dividend)} บาท/ปี</b><br>
+        เฉลี่ย 
+        <b>${formatNumber(monthlyDividend)} บาท/เดือน</b>
+    </div>
+    `;
+
+
+    box.innerHTML = tips;
 
 }
 
