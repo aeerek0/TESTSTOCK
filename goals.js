@@ -149,6 +149,14 @@ document.getElementById("healthCurrentPortfolio").innerText =
 document.getElementById("healthTargetPortfolio").innerText =
     formatNumber(goals.portfolioGoal);
 
+    document.getElementById("healthProgressPercent").innerText =
+    portfolioPercent.toFixed(2);
+
+document.getElementById("healthRemainingAmount").innerText =
+    formatNumber(
+        Math.max(goals.portfolioGoal - currentPortfolio, 0)
+    );
+
 
 let projectionYear = document.getElementById("projectionYear").innerText;
 
