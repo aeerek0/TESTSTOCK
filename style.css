@@ -829,70 +829,167 @@
 }
 
  
-        .goal-health-card {
-    border-radius: 18px;
-    border: none;
+/* =====================
+   Goal Health Dashboard
+===================== */
+
+.goal-health-card {
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
 }
 
 
-.goal-status-box {
+.goal-health-card .card-body{
+    padding:16px;
+}
+
+
+.goal-health-card h5{
+    font-weight:700;
+    color:#6e3b23;
+    font-size:1.05rem;
+}
+
+
+/* Status */
+
+.goal-status-box{
 
     text-align:center;
-    font-size:22px;
-    font-weight:700;
 
-    padding:12px;
+    padding:10px;
 
-    border-radius:15px;
+    margin-bottom:12px;
 
-    background:#e8f5e9;
-    color:#2e7d32;
+    border-radius:14px;
 
-}
+    background:linear-gradient(
+        135deg,
+        #dff7e8,
+        #f6fff8
+    );
 
+    color:#198754;
 
-.health-item {
+    font-size:18px;
 
-    background:#f8f9fa;
+    font-weight:800;
 
-    border-radius:15px;
-
-    padding:15px;
-
-}
-
-
-.health-label {
-
-    font-size:14px;
-    color:#6c757d;
+    box-shadow:
+    0 3px 8px rgba(25,135,84,.10);
 
 }
 
 
-.health-value {
+/* KPI Box */
 
-    font-size:22px;
-    font-weight:700;
+.health-item{
 
-    margin-top:5px;
+    background:#ffffff;
+
+    border-radius:14px;
+
+    padding:10px 8px;
+
+    border:1px solid #f0e6df;
+
+    box-shadow:
+    0 2px 6px rgba(0,0,0,.04);
+
+    transition:.2s;
 
 }
-.goal-health-card .card-body{
-    padding:18px;
+
+
+.health-item:hover{
+
+    transform:translateY(-2px);
+
 }
 
+
+/* Label */
+
+.health-label{
+
+    font-size:12px;
+
+    color:#888;
+
+    margin-bottom:2px;
+
+}
+
+
+/* Value */
+
+.health-value{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    color:#6e3b23;
+
+}
+
+
+
+/* Status สี */
 
 .goal-status-box.warning{
+
     background:#fff3cd;
+
     color:#856404;
+
 }
 
 
 .goal-status-box.danger{
+
     background:#fde2e1;
+
     color:#b02a37;
+
 }
 
+
+
+/* Mobile */
+
+@media(max-width:576px){
+
+    .goal-health-card .card-body{
+
+        padding:12px;
+
+    }
+
+
+    .goal-status-box{
+
+        font-size:17px;
+
+        padding:9px;
+
+    }
+
+
+    .health-item{
+
+        padding:9px 6px;
+
+    }
+
+
+    .health-value{
+
+        font-size:17px;
+
+    }
+
+}
 
     </style>
