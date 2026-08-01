@@ -1,3 +1,5 @@
+let projectionChart = null;
+
 function saveGoals() {
     const goals = {
         portfolioGoal: Number(document.getElementById("inputPortfolioGoal").value) || 0,
@@ -330,7 +332,11 @@ function renderProjectionChart(current, target, monthly, rate) {
     }
 
 
-    new Chart(ctx, {
+    if (projectionChart) {
+    projectionChart.destroy();
+}
+
+projectionChart = new Chart(ctx,{
 
         type: "line",
 
