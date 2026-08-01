@@ -123,6 +123,51 @@ function loadGoals() {
     } else {
         document.getElementById("projectionYear").innerText = goals.targetYear || "-";
     }
+
+    // =========================
+// Goal Health
+// =========================
+
+document.getElementById("healthCurrentPortfolio").innerText =
+    formatNumber(currentPortfolio);
+
+document.getElementById("healthTargetPortfolio").innerText =
+    formatNumber(goals.portfolioGoal);
+
+
+let projectionYear = document.getElementById("projectionYear").innerText;
+
+document.getElementById("healthProjectionYear").innerText =
+    projectionYear;
+
+
+const currentYear = new Date().getFullYear();
+
+if (projectionYear !== "-") {
+
+    const remainYear = Number(projectionYear) - currentYear;
+
+    document.getElementById("healthRemainYear").innerText =
+        remainYear > 0 ? remainYear : 0;
+
+}
+
+
+let status = "🟢 อยู่ในแผน";
+
+
+if (goals.targetYear && projectionYear !== "-") {
+
+    if (Number(projectionYear) > Number(goals.targetYear)) {
+
+        status = "🟡 ต้องเร่งเพิ่ม";
+
+    }
+
+}
+
+
+document.getElementById("goalStatus").innerText = status;
 }
 
 function formatNumber(value) {
