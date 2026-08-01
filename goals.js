@@ -218,6 +218,32 @@ if(goalStatusEl){
     }
 
     goalStatusEl.innerText = status;
+
+    const statusBox =
+    document.getElementById("goalStatusBox");
+
+
+if(statusBox){
+
+    statusBox.classList.remove(
+        "warning",
+        "danger"
+    );
+
+
+    if(status.includes("ต้องเร่งเพิ่ม")){
+
+        statusBox.classList.add("warning");
+
+    }
+
+    else if(status.includes("ไม่ทัน")){
+
+        statusBox.classList.add("danger");
+
+    }
+
+}
 }
 
     // =========================
