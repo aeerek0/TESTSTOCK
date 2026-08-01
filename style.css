@@ -779,4 +779,71 @@
     }
 }
 
+/* =====================
+   Goal Dashboard UI
+===================== */
+
+.goal-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.goal-card:hover {
+    transform: translateY(-3px);
+}
+
+.goal-card .card-body {
+    padding: 25px;
+}
+
+.goal-title {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.goal-number {
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.goal-sub {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+
+/* Portfolio Goal */
+
+.portfolio-goal {
+    background: linear-gradient(
+        135deg,
+        #e3f2fd,
+        #ffffff
+    );
+}
+
+
+/* Dividend Goal */
+
+.dividend-goal {
+    background: linear-gradient(
+        135deg,
+        #e8f5e9,
+        #ffffff
+    );
+}
+
+
+.progress {
+    height: 10px;
+    border-radius: 20px;
+}
+
+.progress-bar {
+    border-radius: 20px;
+}
+
     </style>
