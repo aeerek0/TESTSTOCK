@@ -118,29 +118,46 @@ function loadGoals() {
     const monthly = Number(goals.monthlyInvestment);
     const annualReturn = Number(goals.expectedReturn) / 100;
 
-    if (target > current && monthly > 0) {
-        let value = current;
-        let months = 0;
+if (target > current && monthly > 0) {
 
-        while (value < target && months < 1000) {
-            value = value * (1 + annualReturn / 12);
-            value += monthly;
-            months++;
-        }
+    let value = current;
+    let months = 0;
 
-        const finishDate = new Date();
-        finishDate.setMonth(finishDate.getMonth() + months);
-
-const currentYear = new Date().getFullYear();
-
-const planYears = finishDate.getFullYear() - currentYear;
-
-document.getElementById("projectionYear").innerText =
-    planYears + " ปี";
-
-    } else {
-        document.getElementById("projectionYear").innerText = goals.targetYear || "-";
+    while (value < target && months < 1000) {
+        value = value * (1 + annualReturn / 12);
+        value += monthly;
+        months++;
     }
+
+    const finishDate = new Date();
+    finishDate.setMonth(finishDate.getMonth() + months);
+
+
+    // 🎯 Goal Status
+    const targetYear = finishDate.getFullYear();
+
+    const remainYears =
+        targetYear - new Date().getFullYear();
+
+
+    document.getElementById("goalTargetYear").innerText =
+        targetYear;
+
+    document.getElementById("goalRemainYear").innerText =
+        remainYears;
+
+
+    // 📈 Investment Plan
+    document.getElementById("projectionYear").innerText =
+        remainYears + " ปี";
+
+
+} else {
+
+    document.getElementById("projectionYear").innerText =
+        goals.targetYear || "-";
+
+}
 
     // =========================
 // Goal Health
