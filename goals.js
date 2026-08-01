@@ -56,12 +56,11 @@ function loadGoals() {
     goals.expectedReturn
 );
 
-renderSmartTips(
+    renderSmartTips(
     currentPortfolio,
     goals.portfolioGoal,
     goals.monthlyInvestment,
-    currentDividend,
-    goals.expectedReturn
+    currentDividend
 );
 
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
@@ -148,14 +147,6 @@ document.getElementById("healthCurrentPortfolio").innerText =
 
 document.getElementById("healthTargetPortfolio").innerText =
     formatNumber(goals.portfolioGoal);
-
-    document.getElementById("healthProgressPercent").innerText =
-    portfolioPercent.toFixed(2);
-
-document.getElementById("healthRemainingAmount").innerText =
-    formatNumber(
-        Math.max(goals.portfolioGoal - currentPortfolio, 0)
-    );
 
 
 let projectionYear = document.getElementById("projectionYear").innerText;
@@ -384,8 +375,7 @@ function renderSmartTips(
     currentPortfolio,
     target,
     monthly,
-    dividend,
-    rate
+    dividend
 ){
 
     const box = document.getElementById("smartTips");
@@ -422,7 +412,7 @@ if (monthly > 0 && target > currentPortfolio) {
 
     while (value < target && years < 50) {
 
-        value = value * (1 + rate / 100);
+        value = value * (1 + 0.08);
         value += testMonthly * 12;
 
         years++;
