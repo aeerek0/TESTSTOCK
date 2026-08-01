@@ -67,6 +67,55 @@
     }
 }
 
+        .goal-health-card {
+    border-radius: 18px;
+    border: none;
+}
+
+
+.goal-status-box {
+
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    background:#e8f5e9;
+    color:#2e7d32;
+
+}
+
+
+.health-item {
+
+    background:#f8f9fa;
+
+    border-radius:15px;
+
+    padding:15px;
+
+}
+
+
+.health-label {
+
+    font-size:14px;
+    color:#6c757d;
+
+}
+
+
+.health-value {
+
+    font-size:22px;
+    font-weight:700;
+
+    margin-top:5px;
+
+}
 </style>
     
 </head>
@@ -128,64 +177,102 @@
             </div>
         </div>
 
-        <!-- Goal Health -->
+<!-- Goal Health -->
 
-<div class="card mt-3 shadow-sm">
+<div class="card mt-3 shadow-sm goal-health-card">
 
     <div class="card-body">
 
-        <h5>
-            🎯 สถานะเป้าหมาย
+        <h5 class="mb-3">
+            🎯 Goal Health
         </h5>
 
 
-        <h6>
-            💰 เป้าหมายมูลค่าพอร์ต
-        </h6>
+        <div class="goal-status-box" id="goalStatusBox">
 
-
-        <h4>
-            <span id="healthCurrentPortfolio">
-                0
-            </span>
-            /
-            <span id="healthTargetPortfolio">
-                0
-            </span>
-            บาท
-        </h4>
-
-
-        <p>
-            สถานะ
             <span id="goalStatus">
-                -
+                🟢 อยู่ในแผน
             </span>
-        </p>
+
+        </div>
 
 
-  <p>
-    🎯 ปีที่ต้องการถึง
-    <span id="healthTargetYear">
-        -
-    </span>
-</p>
-
-<p>
-    📈 คาดว่าจะถึง
-    <span id="healthProjectionYear">
-        -
-    </span>
-</p>
+        <div class="row text-center mt-3 g-3">
 
 
-        <p>
-            ⏳ เหลืออีก
-            <span id="healthRemainYear">
-                -
-            </span>
-            ปี
-        </p>
+            <div class="col-6">
+
+                <div class="health-item">
+
+                    <div class="health-label">
+                        🎯 เป้าหมาย
+                    </div>
+
+                    <div class="health-value">
+                        <span id="healthTargetYear">
+                            2035
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6">
+
+                <div class="health-item">
+
+                    <div class="health-label">
+                        📈 ระบบคาด
+                    </div>
+
+                    <div class="health-value">
+                        <span id="healthProjectionYear">
+                            2034
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6">
+
+                <div class="health-item">
+
+                    <div class="health-label">
+                        🚀 ผลลัพธ์
+                    </div>
+
+                    <div class="health-value" id="healthResult">
+                        เร็วกว่า 1 ปี
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6">
+
+                <div class="health-item">
+
+                    <div class="health-label">
+                        ⏳ ระยะเวลา
+                    </div>
+
+                    <div class="health-value">
+                        อีก <span id="healthRemainYear">8</span> ปี
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
 
 
     </div>
