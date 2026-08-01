@@ -246,6 +246,33 @@ if(statusBox){
 }
 }
 
+    const healthResultEl = document.getElementById("healthResult");
+
+if (healthResultEl) {
+
+    const diff =
+        Number(goals.targetYear) - Number(projectionYear);
+
+
+    if (diff > 0) {
+
+        healthResultEl.innerText =
+            "เร็วกว่า " + diff + " ปี";
+
+    } else if (diff < 0) {
+
+        healthResultEl.innerText =
+            "ช้ากว่า " + Math.abs(diff) + " ปี";
+
+    } else {
+
+        healthResultEl.innerText =
+            "ตรงตามแผน";
+
+    }
+
+}
+
     // =========================
 // Investment Milestone
 // =========================
