@@ -331,4 +331,4 @@ function renderSmartTips(currentPortfolio, target, monthly, dividend) {
     box.innerHTML = tips;
 }
 
-
+window.loadGoals = loadGoals;
