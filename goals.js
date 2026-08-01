@@ -93,6 +93,8 @@ renderSmartTips(
 
     document.getElementById("dividendGoalPercent").innerText = dividendPercent.toFixed(2);
     document.getElementById("dividendGoalProgressBar").style.width = Math.min(dividendPercent, 100) + "%";
+    document.getElementById("remainingDividendGoal").innerText =
+    formatNumber(Math.max(goals.dividendGoal - currentDividend, 0));
 
     // ตรวจสอบว่ามี Element นี้อยู่ใน HTML หรือไม่ ป้องกัน Error กรณีไม่มี ID นี้
     const dividendPercentEl = document.getElementById("dividendPercent");
