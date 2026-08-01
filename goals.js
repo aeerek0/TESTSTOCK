@@ -56,11 +56,12 @@ function loadGoals() {
     goals.expectedReturn
 );
 
-    renderSmartTips(
+renderSmartTips(
     currentPortfolio,
     goals.portfolioGoal,
     goals.monthlyInvestment,
-    currentDividend
+    currentDividend,
+    goals.expectedReturn
 );
 
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
@@ -375,7 +376,8 @@ function renderSmartTips(
     currentPortfolio,
     target,
     monthly,
-    dividend
+    dividend,
+    rate
 ){
 
     const box = document.getElementById("smartTips");
@@ -412,7 +414,7 @@ if (monthly > 0 && target > currentPortfolio) {
 
     while (value < target && years < 50) {
 
-        value = value * (1 + 0.08);
+        value = value * (1 + rate / 100);
         value += testMonthly * 12;
 
         years++;
