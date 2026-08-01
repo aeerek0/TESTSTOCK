@@ -59,7 +59,8 @@ renderSmartTips(
     goals.portfolioGoal,
     goals.monthlyInvestment,
     currentDividend,
-    goals.expectedReturn
+    goals.expectedReturn,
+    goals.targetYear
 );
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
     document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
@@ -387,7 +388,9 @@ function renderSmartTips(
     currentPortfolio,
     target,
     monthly,
-    dividend
+    dividend,
+    expectedReturn,
+    targetYear
 ){
 
     const box = document.getElementById("smartTips");
@@ -508,6 +511,97 @@ function renderSmartTips(
     </div>
     `;
 
+
+    // =========================
+// Extra Investment Suggestion
+// =========================
+
+let extraTip = "";
+
+
+if(targetYear){
+
+    const currentYear = new Date().getFullYear();
+
+    const years =
+        Number(targetYear) - currentYear;
+
+
+    if(years > 0){
+
+        let requiredMonthly = monthly;
+
+
+        while(requiredMonthly < 100000){
+
+            let value = currentPortfolio;
+
+
+            for(let i = 0; i < years * 12; i++){
+
+                value =
+                    value * (1 + expectedReturn / 100 / 12);
+
+                value += requiredMonthly;
+
+            }
+
+
+            if(value >= target){
+                break;
+            }
+
+
+            requiredMonthly += 500;
+
+        }
+
+
+        const extra =
+            requiredMonthly - monthly;
+
+
+        if(extra > 0){
+
+            extraTip = `
+
+            <div class="mb-3">
+
+            🚀 <b>คำแนะนำเพิ่ม</b><br>
+
+            ถ้าต้องการให้ถึงเป้าหมายปี 
+            <b>${targetYear}</b><br>
+
+            ควรเพิ่มลงทุนประมาณ
+
+            <b>${formatNumber(extra)} บาท/เดือน</b>
+
+            </div>
+
+            `;
+
+        }else{
+
+            extraTip = `
+
+            <div class="mb-3">
+
+            ✅ <b>แผนปัจจุบันทันเป้าหมาย</b><br>
+
+            เงินลงทุนปัจจุบันเพียงพอสำหรับปี ${targetYear}
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+}
+
+
+tips += extraTip;
 
     box.innerHTML = tips;
 
