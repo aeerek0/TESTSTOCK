@@ -990,6 +990,36 @@
 
     }
 
+/* Goal Save Button */
+
+.goal-save-btn,
+.btn-primary {
+
+    background-color:#e88d67 !important;
+
+    border-color:#e88d67 !important;
+
+    color:white !important;
+
+    border-radius:10px;
+
+    padding:10px 18px;
+
+    font-weight:600;
+
 }
+
+
+.goal-save-btn:hover,
+.btn-primary:hover {
+
+    background-color:#cf7956 !important;
+
+    border-color:#cf7956 !important;
+
+    color:white !important;
+
+}
+
 
     </style>
