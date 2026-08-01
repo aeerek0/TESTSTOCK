@@ -168,6 +168,93 @@ if (goals.targetYear && projectionYear !== "-") {
 
 
 document.getElementById("goalStatus").innerText = status;
+
+    // =========================
+// Investment Milestone
+// =========================
+
+const milestoneList = [
+    {
+        name: "🥉 เริ่มต้น",
+        percent: 25
+    },
+    {
+        name: "🥈 ครึ่งทาง",
+        percent: 50
+    },
+    {
+        name: "🥇 ใกล้ถึงเป้าหมาย",
+        percent: 75
+    },
+    {
+        name: "🏆 เป้าหมายสำเร็จ",
+        percent: 100
+    }
+];
+
+
+let milestoneHTML = "";
+
+
+milestoneList.forEach(m => {
+
+    const targetAmount =
+        goals.portfolioGoal * (m.percent / 100);
+
+
+    const progress =
+        Math.min(
+            (currentPortfolio / targetAmount) * 100,
+            100
+        );
+
+
+    const completed =
+        currentPortfolio >= targetAmount;
+
+
+    milestoneHTML += `
+
+    <div class="mb-3">
+
+        <div class="d-flex justify-content-between">
+
+            <span>
+                ${m.name}
+            </span>
+
+            <span>
+                ${formatNumber(targetAmount)} บาท
+            </span>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div 
+            class="progress-bar ${completed ? 'bg-success' : ''}"
+            style="width:${progress}%">
+
+            </div>
+
+        </div>
+
+
+        <small>
+            ${completed ? "✅ สำเร็จแล้ว" : 
+            "กำลังเดินทาง " + progress.toFixed(1) + "%"}
+        </small>
+
+    </div>
+
+    `;
+
+});
+
+
+document.getElementById("milestoneContainer").innerHTML =
+    milestoneHTML;
 }
 
 function formatNumber(value) {
