@@ -592,32 +592,31 @@ function renderSmartTips(
     </div>
     `;
 
-
-    // =========================
+// =========================
 // Extra Investment Suggestion
 // =========================
+
 let extraTip = "";
 
 
-if(targetYear){
+if (targetYear) {
 
     const currentYear = new Date().getFullYear();
 
-    const years =
-        Number(targetYear) - currentYear;
+    const years = Number(targetYear) - currentYear;
 
 
-    if(years > 0){
+    if (years > 0) {
 
         let requiredMonthly = monthly;
 
 
-        while(requiredMonthly < 100000){
+        while (requiredMonthly < 100000) {
 
             let value = currentPortfolio;
 
 
-            for(let i = 0; i < years * 12; i++){
+            for (let i = 0; i < years * 12; i++) {
 
                 value =
                     value * (1 + expectedReturn / 100 / 12);
@@ -627,7 +626,7 @@ if(targetYear){
             }
 
 
-            if(value >= target){
+            if (value >= target) {
                 break;
             }
 
@@ -637,11 +636,11 @@ if(targetYear){
         }
 
 
-        const extra =
-            requiredMonthly - monthly;
+        const extra = requiredMonthly - monthly;
 
 
-        if(extra > 0){
+        if (extra > 0) {
+
 
             extraTip = `
 
@@ -662,40 +661,41 @@ if(targetYear){
 
                 <div class="coach-plan-row">
 
+
                     <div class="coach-box current">
 
                         <small>
-                        ลงทุนปัจจุบัน
+                            ลงทุนปัจจุบัน
                         </small>
 
                         <strong>
-                        ${formatNumber(monthly)}
+                            ${formatNumber(monthly)}
                         </strong>
 
                         <span>
-                        บาท/เดือน
+                            บาท/เดือน
                         </span>
 
                     </div>
 
 
                     <div class="coach-arrow">
-                    ➜
+                        ➜
                     </div>
 
 
                     <div class="coach-box recommend">
 
                         <small>
-                        แนะนำ
+                            แนะนำ
                         </small>
 
                         <strong>
-                        ${formatNumber(requiredMonthly)}
+                            ${formatNumber(requiredMonthly)}
                         </strong>
 
                         <span>
-                        บาท/เดือน
+                            บาท/เดือน
                         </span>
 
                     </div>
@@ -709,8 +709,8 @@ if(targetYear){
                     🚀 ต้องเพิ่ม
 
                     <b>
-                    +${formatNumber(extra)}
-                    บาท/เดือน
+                        +${formatNumber(extra)}
+                        บาท/เดือน
                     </b>
 
                 </div>
@@ -721,7 +721,7 @@ if(targetYear){
             `;
 
 
-        }else{
+        } else {
 
 
             extraTip = `
@@ -732,7 +732,8 @@ if(targetYear){
 
                 <br><br>
 
-                ✅ แผนปัจจุบันสามารถถึงเป้าหมายปี ${targetYear}
+                ✅ แผนปัจจุบันสามารถถึงเป้าหมายปี 
+                ${targetYear}
 
             </div>
 
@@ -747,51 +748,8 @@ if(targetYear){
 
 tips += extraTip;
 
-<div class="mb-3">
 
-🚀 <b>คำแนะนำเพิ่ม</b><br>
-
-ปัจจุบันลงทุน 
-<b>${formatNumber(monthly)} บาท/เดือน</b><br>
-
-ถ้าต้องการให้ถึงเป้าหมายปี 
-<b>${targetYear}</b><br>
-
-แนะนำเพิ่มอีก 
-<b>${formatNumber(extra)} บาท/เดือน</b><br>
-
-รวมเป็นประมาณ 
-<b>${formatNumber(monthly + extra)} บาท/เดือน</b>
-
-</div>
-
-`;
-
-        }else{
-
-            extraTip = `
-
-            <div class="mb-3">
-
-            ✅ <b>แผนปัจจุบันทันเป้าหมาย</b><br>
-
-            เงินลงทุนปัจจุบันเพียงพอสำหรับปี ${targetYear}
-
-            </div>
-
-            `;
-
-        }
+box.innerHTML = tips;
 
     }
-
-}
-
-
-tips += extraTip;
-
-    box.innerHTML = tips;
-
-}
-
 window.loadGoals = loadGoals;
