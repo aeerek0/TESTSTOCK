@@ -131,8 +131,12 @@ function loadGoals() {
         const finishDate = new Date();
         finishDate.setMonth(finishDate.getMonth() + months);
 
-        document.getElementById("projectionYear").innerText =
-            finishDate.getFullYear();
+const currentYear = new Date().getFullYear();
+
+const planYears = finishDate.getFullYear() - currentYear;
+
+document.getElementById("projectionYear").innerText =
+    planYears + " ปี";
 
     } else {
         document.getElementById("projectionYear").innerText = goals.targetYear || "-";
