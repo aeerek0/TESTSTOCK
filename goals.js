@@ -49,6 +49,13 @@ function loadGoals() {
     const currentPortfolio = Number(localStorage.getItem("currentPortfolioValue")) || 0;
     const currentDividend = Number(localStorage.getItem("currentDividendValue")) || 0;
 
+    renderProjectionChart(
+    currentPortfolio,
+    goals.portfolioGoal,
+    goals.monthlyInvestment,
+    goals.expectedReturn
+);
+
     document.getElementById("currentPortfolioValue").innerText = formatNumber(currentPortfolio) + " บาท";
     document.getElementById("currentDividendValue").innerText = formatNumber(currentDividend) + " บาท";
 
@@ -266,6 +273,95 @@ document.getElementById("milestoneContainer").innerHTML =
 
 function formatNumber(value) {
     return Number(value || 0).toLocaleString("en-US");
+}
+
+function renderProjectionChart(current, target, monthly, rate) {
+
+    const ctx = document.getElementById("projectionChart");
+
+    if (!ctx) return;
+
+
+    let labels = [];
+    let projected = [];
+    let targetLine = [];
+
+
+    let value = current;
+    let year = new Date().getFullYear();
+
+
+    for (let i = 0; i <= 10; i++) {
+
+        labels.push(year + i);
+
+
+        projected.push(Math.round(value));
+
+        targetLine.push(target);
+
+
+        // คำนวณปีถัดไป
+        value = value * (1 + rate / 100);
+        value += monthly * 12;
+
+    }
+
+
+    new Chart(ctx, {
+
+        type: "line",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [
+
+                {
+                    label: "📈 พอร์ตคาดการณ์",
+                    data: projected,
+                    tension: 0.3
+                },
+
+                {
+                    label: "🎯 เป้าหมาย",
+                    data: targetLine,
+                    borderDash: [5,5],
+                    tension:0
+                }
+
+            ]
+
+        },
+
+
+        options: {
+
+            responsive:true,
+
+            plugins:{
+                legend:{
+                    position:"bottom"
+                }
+            },
+
+            scales:{
+
+                y:{
+                    ticks:{
+                        callback:function(value){
+                            return value.toLocaleString()+" บาท";
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    });
+
 }
 
 window.loadGoals = loadGoals;
