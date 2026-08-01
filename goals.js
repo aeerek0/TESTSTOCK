@@ -1,5 +1,3 @@
-window.loadGoals = loadGoals;
-
 function saveGoals() {
     const goals = {
         portfolioGoal: Number(document.getElementById("inputPortfolioGoal").value) || 0,
@@ -389,8 +387,7 @@ function renderSmartTips(
     currentPortfolio,
     target,
     monthly,
-    dividend,
-    rate
+    dividend
 ){
 
     const box = document.getElementById("smartTips");
@@ -401,53 +398,97 @@ function renderSmartTips(
     let tips = "";
 
 
-    // แผนปัจจุบัน
+    // =========================
+    // Portfolio Progress
+    // =========================
 
-    tips += `
-    <div class="mb-3">
-        📌 <b>แผนปัจจุบัน</b><br>
-        ลงทุนเพิ่ม 
-        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
-        พอร์ตปัจจุบัน 
-        <b>${formatNumber(currentPortfolio)} บาท</b>
-    </div>
-    `;
+    const portfolioPercent = target > 0
+        ? (currentPortfolio / target) * 100
+        : 0;
 
 
-    // เร่งเป้าหมาย
-// เร่งเป้าหมาย (คำนวณจริง)
+    let statusText = "";
 
-if (monthly > 0 && target > currentPortfolio) {
+    if(portfolioPercent < 25){
 
-    const targetYear = new Date().getFullYear() + 1;
+        statusText = "🌱 ระยะเริ่มต้นสร้างพอร์ต";
 
-    let testMonthly = monthly;
-    let value = currentPortfolio;
-    let years = 0;
+    } else if(portfolioPercent < 75){
 
-    while (value < target && years < 50) {
+        statusText = "🚀 กำลังเติบโต";
 
-        value = value * (1 + rate / 100);
-        value += testMonthly * 12;
+    } else if(portfolioPercent < 100){
 
-        years++;
+        statusText = "🔥 ใกล้ถึงเป้าหมาย";
+
+    } else {
+
+        statusText = "🏆 บรรลุเป้าหมายแล้ว";
 
     }
 
 
     tips += `
     <div class="mb-3">
-        🚀 <b>เร่งเป้าหมาย</b><br>
-        แผนปัจจุบันลงทุน 
-        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
-        คาดว่าจะถึงเป้าหมายประมาณ 
-        <b>${years} ปี</b>
+
+        📊 <b>สถานะพอร์ต</b><br>
+
+        ${statusText}<br>
+
+        ความสำเร็จ 
+        <b>${portfolioPercent.toFixed(2)}%</b>
+
     </div>
     `;
 
-}
 
-    // Dividend
+    // =========================
+    // Goal Analysis
+    // =========================
+
+    const remain =
+        Math.max(target - currentPortfolio,0);
+
+
+    tips += `
+    <div class="mb-3">
+
+        🎯 <b>เป้าหมาย</b><br>
+
+        เป้าหมาย 
+        <b>${formatNumber(target)} บาท</b><br>
+
+        เหลืออีก 
+        <b>${formatNumber(remain)} บาท</b>
+
+    </div>
+    `;
+
+
+
+    // =========================
+    // Investment Plan
+    // =========================
+
+    tips += `
+    <div class="mb-3">
+
+        📌 <b>แผนปัจจุบัน</b><br>
+
+        ลงทุนเพิ่ม 
+        <b>${formatNumber(monthly)} บาท/เดือน</b><br>
+
+        พอร์ตปัจจุบัน 
+        <b>${formatNumber(currentPortfolio)} บาท</b>
+
+    </div>
+    `;
+
+
+
+    // =========================
+    // Dividend Analysis
+    // =========================
 
     const monthlyDividend =
         dividend / 12;
@@ -455,11 +496,15 @@ if (monthly > 0 && target > currentPortfolio) {
 
     tips += `
     <div>
+
         💰 <b>Passive Income</b><br>
+
         ปันผลปัจจุบัน 
         <b>${formatNumber(dividend)} บาท/ปี</b><br>
+
         เฉลี่ย 
         <b>${formatNumber(monthlyDividend)} บาท/เดือน</b>
+
     </div>
     `;
 
