@@ -100,9 +100,42 @@ function loadGoals() {
 
     document.getElementById("projectionExpectedReturn").innerText =
         goals.expectedReturn + " %";
+const target = Number(goals.portfolioGoal);
+const current = currentPortfolio;
+const monthly = Number(goals.monthlyInvestment);
+const annualReturn = Number(goals.expectedReturn) / 100;
+
+if (target > current && monthly > 0) {
+
+    let value = current;
+    let months = 0;
+
+    while (value < target && months < 1000) {
+
+        value = value * (1 + annualReturn / 12);
+        value += monthly;
+
+        months++;
+    }
+
+    const finishDate = new Date();
+    finishDate.setMonth(finishDate.getMonth() + months);
 
     document.getElementById("projectionYear").innerText =
-        goals.targetYear || "-";
+        finishDate.getFullYear();
+
+    const years = Math.floor(months / 12);
+    const remainMonths = months % 12;
+
+    document.getElementById("projectionDuration").innerText =
+        `อีกประมาณ ${years} ปี ${remainMonths} เดือน`;
+
+} else {
+
+    document.getElementById("projectionYear").innerText = "-";
+    document.getElementById("projectionDuration").innerText = "-";
+
+}
 }
 
 function formatNumber(value) {
