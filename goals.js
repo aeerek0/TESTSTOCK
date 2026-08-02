@@ -98,14 +98,7 @@ renderSmartTips(
     document.getElementById("dividendProgress").style.width =
         Math.min(dividendPercent, 100) + "%";
 
-    document.getElementById("projectionCurrent").innerText =
-        formatNumber(currentPortfolio) + " บาท";
 
-    document.getElementById("projectionMonthlyInvestment").innerText =
-        formatNumber(goals.monthlyInvestment) + " บาท";
-
-    document.getElementById("projectionExpectedReturn").innerText =
-        goals.expectedReturn + " %";
 
     const target = Number(goals.portfolioGoal);
     const current = currentPortfolio;
