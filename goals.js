@@ -1,4 +1,3 @@
-let projectionChart = null;
 
 function saveGoals() {
     const goals = {
