@@ -1,4 +1,3 @@
-
 function saveGoals() {
     const goals = {
         portfolioGoal: Number(document.getElementById("inputPortfolioGoal").value) || 0,
