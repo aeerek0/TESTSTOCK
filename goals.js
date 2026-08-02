@@ -105,25 +105,31 @@ renderSmartTips(
     const monthly = Number(goals.monthlyInvestment);
     const annualReturn = Number(goals.expectedReturn) / 100;
 
-    if (target > current && monthly > 0) {
-        let value = current;
-        let months = 0;
+let projectionYear = "-";
 
-        while (value < target && months < 1000) {
-            value = value * (1 + annualReturn / 12);
-            value += monthly;
-            months++;
-        }
+if (target > current && monthly > 0) {
 
-        const finishDate = new Date();
-        finishDate.setMonth(finishDate.getMonth() + months);
+    let value = current;
+    let months = 0;
 
-        document.getElementById("projectionYear").innerText =
-            finishDate.getFullYear();
-
-    } else {
-        document.getElementById("projectionYear").innerText = goals.targetYear || "-";
+    while (value < target && months < 1000) {
+        value = value * (1 + annualReturn / 12);
+        value += monthly;
+        months++;
     }
+
+    const finishDate = new Date();
+    finishDate.setMonth(finishDate.getMonth() + months);
+
+    projectionYear = finishDate.getFullYear().toString();
+
+} else {
+
+    projectionYear = goals.targetYear
+        ? goals.targetYear.toString()
+        : "-";
+
+}
 
 // =========================
 // Goal Health
@@ -147,8 +153,7 @@ if (healthTargetPortfolioEl) {
 }
 
 
-let projectionYear =
-    document.getElementById("projectionYear").innerText;
+
 
 
 // ปีเป้าหมาย
@@ -257,99 +262,6 @@ if (healthResultEl) {
 
 }
 
-    // =========================
-// Investment Milestone
-// =========================
-
-const milestoneList = [
-    {
-        name: "🌱 เริ่มต้น 25%",
-        percent: 25
-    },
-    {
-        name: "🚀 ครึ่งทาง 50%",
-        percent: 50
-    },
-    {
-        name: "🔥 ช่วงเร่งเครื่อง 75%",
-        percent: 75
-    },
-    {
-        name: "🏆 Freedom Goal 100%",
-        percent: 100
-    }
-];
-
-
-let milestoneHTML = "";
-
-
-milestoneList.forEach(m => {
-
-    const targetAmount =
-        goals.portfolioGoal * (m.percent / 100);
-
-
-    const progress =
-        Math.min(
-            (currentPortfolio / targetAmount) * 100,
-            100
-        );
-
-
-    const completed =
-        currentPortfolio >= targetAmount;
-
-
-    milestoneHTML += `
-
-    <div class="mb-3">
-
-        <div class="d-flex justify-content-between">
-
-            <span>
-                ${m.name}
-            </span>
-
-            <span>
-                ${formatNumber(targetAmount)} บาท
-            </span>
-
-        </div>
-
-
-        <div class="progress">
-
-            <div 
-            class="progress-bar ${completed ? 'bg-success' : ''}"
-            style="width:${progress}%">
-
-            </div>
-
-        </div>
-
-
-<small>
-${
-completed 
-? "✅ สำเร็จแล้ว"
-: 
-"กำลังเดินทาง " + progress.toFixed(1) + 
-"% | เหลืออีก " +
-formatNumber(Math.max(targetAmount - currentPortfolio,0)) +
-" บาท"
-}
-</small>
-
-    </div>
-
-    `;
-
-});
-
-
-document.getElementById("milestoneContainer").innerHTML =
-    milestoneHTML;
 }
 
 function formatNumber(value) {
