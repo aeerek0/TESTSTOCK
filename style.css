@@ -767,23 +767,6 @@
 
 }
 
-       /* =====================
-   Projection Chart
-===================== */
-
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
-}
-
-@media (min-width: 992px) {
-    .chart-container {
-        height: 350px;
-    }
-}
-
-
   
 .goal-card {
     border: none;
