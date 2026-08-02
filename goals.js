@@ -49,13 +49,6 @@ function loadGoals() {
     const currentPortfolio = Number(localStorage.getItem("currentPortfolioValue")) || 0;
     const currentDividend = Number(localStorage.getItem("currentDividendValue")) || 0;
 
-    renderProjectionChart(
-    currentPortfolio,
-    goals.portfolioGoal,
-    goals.monthlyInvestment,
-    goals.expectedReturn
-);
-
 renderSmartTips(
     currentPortfolio,
     goals.portfolioGoal,
