@@ -106,57 +106,92 @@ window.saveSheetUrl = function() {
 };
 
 const typeElement = document.getElementById('type');
+
 if (typeElement) {
+
     typeElement.addEventListener('change', function () {
+
         const type = this.value;
+
         const amountContainer = document.getElementById('amountContainer');
         const symbolGroup = document.getElementById('symbol').parentElement;
         const sectorGroup = document.getElementById('sector').parentElement;
         const brokerGroup = document.getElementById('broker').parentElement;
         const priceGroup = document.getElementById('price').parentElement;
         const unitsGroup = document.getElementById('units').parentElement;
-        const feeGroup = document.getElementById('feeRate').parentElement;
+
+        // ⭐ เปลี่ยนจาก feeRate เป็น fee + vat
+        const feeGroup = document.getElementById('fee').parentElement;
+        const vatGroup = document.getElementById('vat').parentElement;
+
         const xdDateContainer = document.getElementById('xdDateContainer');
 
-        // แสดงทุกอย่างก่อน
+        // -----------------------------
+        // ค่าเริ่มต้น: แสดงทุกอย่าง
+        // -----------------------------
+
         symbolGroup.style.display = "";
         sectorGroup.style.display = "";
         brokerGroup.style.display = "";
         priceGroup.style.display = "";
         unitsGroup.style.display = "";
+
         feeGroup.style.display = "";
+        vatGroup.style.display = "";
+
         amountContainer.style.display = "none";
         xdDateContainer.style.display = "none";
 
+
+        // -----------------------------
+        // ฝากเงิน / ถอนเงิน
+        // -----------------------------
+
         if (type === "ฝากเงิน" || type === "ถอนเงิน") {
+
             amountContainer.style.display = "block";
+
             symbolGroup.style.display = "none";
             sectorGroup.style.display = "none";
             brokerGroup.style.display = "none";
             priceGroup.style.display = "none";
             unitsGroup.style.display = "none";
+
             feeGroup.style.display = "none";
+            vatGroup.style.display = "none";
         }
 
-if (type === "ปันผล") {
-    amountContainer.style.display = "block";
-    xdDateContainer.style.display = "block";
 
-    // ปันผลใช้ Symbol + Sector + Price(DPU) + Units
-    symbolGroup.style.display = "";
-    sectorGroup.style.display = "";
-    brokerGroup.style.display = "";
+        // -----------------------------
+        // ปันผล
+        // -----------------------------
 
-    priceGroup.style.display = "";
-    unitsGroup.style.display = "";
+        if (type === "ปันผล") {
 
-    // ไม่ต้องใช้ค่าธรรมเนียม
-    feeGroup.style.display = "none";
+            amountContainer.style.display = "block";
+            xdDateContainer.style.display = "block";
+
+            // ปันผลใช้
+            // Symbol + Sector + Broker
+            // Price(DPU) + Units
+
+            symbolGroup.style.display = "";
+            sectorGroup.style.display = "";
+            brokerGroup.style.display = "";
+
+            priceGroup.style.display = "";
+            unitsGroup.style.display = "";
+
+            // ไม่ใช้ค่าธรรมเนียม
+            feeGroup.style.display = "none";
+            vatGroup.style.display = "none";
+        }
+
+    });
+
+    // ⭐ ให้ทำงานทันทีตอนเปิดหน้า
+    typeElement.dispatchEvent(new Event('change'));
 }
-});
-     typeElement.dispatchEvent(new Event('change'));
-}
-
 const masterSectorMap = {
     "BA": "Transport", "BCH": "Health Care", "BDMS": "Health Care", "BGRIM": "Energy",
     "CENTEL": "Tourism", "CPALL": "Commerce", "CPN": "Property", "EPG": "Property & Construction",
