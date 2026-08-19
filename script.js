@@ -399,7 +399,13 @@ function startEditMode(rowIndex) {
 
     document.getElementById('price').value = trade.price;
     document.getElementById('units').value = trade.units;
-    document.getElementById('feeRate').value = Number(trade.feeTax || 0).toFixed(2);
+    const feeTax = Number(trade.feeTax || 0);
+
+const fee = feeTax / 1.07;
+const vat = feeTax - fee;
+
+document.getElementById('fee').value = fee.toFixed(2);
+document.getElementById('vat').value = vat.toFixed(2);
 
     document.getElementById('amount').value = trade.netAmount || '';
 
@@ -1140,7 +1146,9 @@ if (tradeForm) {
 
         const price = parseFloat(document.getElementById('price').value) || 0;
         const units = parseInt(document.getElementById('units').value) || 0;
-        const feeTax = parseFloat(document.getElementById('feeRate').value) || 0;
+        const fee = parseFloat(document.getElementById('fee').value) || 0;
+const vat = parseFloat(document.getElementById('vat').value) || 0;
+const feeTax = fee + vat;
         const type = document.getElementById('type').value;
 
         const grossAmount = price * units;
