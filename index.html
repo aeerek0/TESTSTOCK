@@ -379,15 +379,27 @@ Sector
                 </div>
 
 
-                <div class="col-12">
-                    <label class="form-label">ค่าธรรมเนียม + VAT (บาท)</label>
-                    <input type="number" 
-                           step="any" 
-                           id="feeRate" 
-                           class="form-control" 
-                           value="0.0">
-                </div>
+<div class="row g-2">
+    <div class="col-6">
+        <label for="fee" class="form-label">ค่าธรรมเนียม</label>
+        <input type="number"
+               id="fee"
+               class="form-control"
+               step="0.01"
+               min="0"
+               placeholder="0.00">
+    </div>
 
+    <div class="col-6">
+        <label for="vat" class="form-label">VAT</label>
+        <input type="number"
+               id="vat"
+               class="form-control"
+               step="0.01"
+               min="0"
+               placeholder="0.00">
+    </div>
+</div>
 
                 <!-- เพิ่ม Remark -->
                 <div class="col-12">
