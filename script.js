@@ -473,7 +473,8 @@ function cancelEditMode() {
     // ค่าเริ่มต้น
     document.getElementById('type').value = "ซื้อ";
     document.getElementById('date').valueAsDate = new Date();
-    document.getElementById('feeRate').value = "0.0";
+    document.getElementById('fee').value = "0.00";
+document.getElementById('vat').value = "0.00";
 
 
     // ล้างค่าเพิ่มเติม
