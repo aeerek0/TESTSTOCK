@@ -1548,25 +1548,18 @@ units += item.units || 0;
 }
 
 function renderDividendTable() {
-
     const tbody = document.getElementById("dividendTableBody");
     if (!tbody) return;
 
     tbody.innerHTML = "";
 
-    const year =
-        Number(document.getElementById("dividendYear").value);
+    const year = Number(document.getElementById("dividendYear").value);
+    const month = Number(document.getElementById("dividendMonth").value);
 
-    const month =
-        Number(document.getElementById("dividendMonth").value);
-
-    // 🔍 Filter หุ้น
     const stockFilter =
-        document.getElementById("dividendStockFilter")
-            ?.value
-            .trim()
-            .toUpperCase() || "";
-
+        document.getElementById("dividendStockFilter")?.value
+        .trim()
+        .toUpperCase() || "";
 
     let result = {};
     let total = 0;
@@ -1574,178 +1567,119 @@ function renderDividendTable() {
     let allCount = 0;
     let allStock = {};
 
-
     globalTradesData.forEach(t => {
 
-        if (String(t.type).trim() !== "ปันผล")
-            return;
-
-
-        const symbol =
-            String(t.symbol || "")
-                .trim()
-                .toUpperCase();
-
-
-        // 🔍 Filter หุ้น
-        if (
-            stockFilter &&
-            !symbol.includes(stockFilter)
-        ) {
+        if (String(t.type).trim() !== "ปันผล") {
             return;
         }
 
+        const symbol = String(t.symbol || "")
+            .trim()
+            .toUpperCase();
 
-        const amount =
-            Number(t.netAmount) || 0;
+        // 🔍 Filter หุ้น
+        if (stockFilter && !symbol.includes(stockFilter)) {
+            return;
+        }
 
+        const amount = Number(t.netAmount) || 0;
 
         allTotal += amount;
         allCount++;
         allStock[symbol] = true;
 
-
         const d = new Date(t.date);
 
-
-        if (
-            year > 0 &&
-            d.getFullYear() !== year
-        ) {
+        if (year > 0 && d.getFullYear() !== year) {
             return;
         }
 
-
-        if (
-            month > 0 &&
-            (d.getMonth() + 1) !== month
-        ) {
+        if (month > 0 && (d.getMonth() + 1) !== month) {
             return;
         }
-
 
         if (!result[symbol]) {
-
             result[symbol] = {
                 count: 0,
                 amount: 0,
                 dpu: 0,
                 units: 0
             };
-
         }
 
-
         result[symbol].count++;
-
         result[symbol].amount += amount;
-
-        result[symbol].dpu +=
-            Number(t.price) || 0;
-
-        result[symbol].units +=
-            Number(t.units) || 0;
-
+        result[symbol].dpu += Number(t.price) || 0;
+        result[symbol].units += Number(t.units) || 0;
 
         total += amount;
-
     });
-
-
-    // =========================
-    // Summary
-    // =========================
 
     document.getElementById("dividendSelectedTotal").innerText =
         total.toLocaleString(undefined, {
             minimumFractionDigits: 2
         });
 
-
     document.getElementById("dividendAllTotal").innerText =
         allTotal.toLocaleString(undefined, {
             minimumFractionDigits: 2
         });
 
-
     document.getElementById("dividendStockCount").innerText =
         Object.keys(allStock).length;
 
-
     document.getElementById("dividendCount").innerText =
         allCount;
-
 
     document.getElementById("dividendYearTotal").innerText =
         total.toLocaleString(undefined, {
             minimumFractionDigits: 2
         });
 
-
     document.getElementById("dividendGrowth").innerText =
         calculateDividendGrowth() + "%";
 
-
     document.getElementById("dividendAvgMonth").innerText =
-        calculateAverageDividendMonth()
-            .toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            }) + " บาท";
+        calculateAverageDividendMonth().toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        }) + " บาท";
 
-
-    const top =
-        calculateTopDividendStock();
-
+    const top = calculateTopDividendStock();
 
     document.getElementById("dividendTopStock").innerText =
         top.symbol;
-
 
     document.getElementById("dividendTopAmount").innerText =
         top.amount.toLocaleString(undefined, {
             minimumFractionDigits: 2
         }) + " บาท";
 
-
     document.getElementById("dividendTopPercent").innerText =
         top.percent + "% ของ Dividend ทั้งหมด";
 
+    // สร้างข้อมูลก่อนเรียง
+    let rows = Object.keys(result).map(symbol => {
 
-    // =========================
-    // สร้าง Rows
-    // =========================
+        const info = getDividendSummary(
+            symbol,
+            year,
+            month
+        );
 
-    let rows =
-        Object.keys(result).map(symbol => {
+        return {
+            symbol: symbol,
+            count: info.count,
+            dpu: info.dpu,
+            units: result[symbol].units,
+            amount: info.amount,
+            cost: info.cost,
+            yield: info.yield
+        };
+    });
 
-            const info =
-                getDividendSummary(
-                    symbol,
-                    year,
-                    month
-                );
-
-
-            return {
-                symbol: symbol,
-                count: info.count,
-                dpu: info.dpu,
-                units: result[symbol].units,
-                amount: info.amount,
-                cost: info.cost,
-                yield: info.yield
-            };
-
-        });
-
-
-    // =========================
     // เรียงข้อมูล
-    // =========================
-
     const sortType =
         document.getElementById("dividendSort").value;
-
 
     rows.sort((a, b) => {
 
@@ -1768,70 +1702,42 @@ function renderDividendTable() {
 
             default:
                 return 0;
-
         }
-
     });
 
-
-    // =========================
     // แสดงตาราง
-    // =========================
-
     rows.forEach(item => {
 
-        const row =
-            document.createElement("tr");
-
+        const row = document.createElement("tr");
 
         row.innerHTML = `
             <td>${item.symbol}</td>
             <td>${item.count}</td>
             <td>${item.dpu.toFixed(2)}</td>
             <td>${item.units.toLocaleString()}</td>
-            <td>
-                ${item.amount.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                })}
-            </td>
-            <td>
-                ${item.cost.toLocaleString(undefined, {
-                    minimumFractionDigits: 2
-                })}
-            </td>
+            <td>${item.amount.toLocaleString(undefined, {
+                minimumFractionDigits: 2
+            })}</td>
+            <td>${item.cost.toLocaleString(undefined, {
+                minimumFractionDigits: 2
+            })}</td>
             <td>${item.yield.toFixed(2)}%</td>
         `;
 
-
         tbody.appendChild(row);
-
     });
 
-
-    // =========================
-    // Charts
-    // =========================
-
-    if (
-        typeof renderDividendMonthlyChart === "function"
-    ) {
+    if (typeof renderDividendMonthlyChart === "function") {
         renderDividendMonthlyChart();
     }
 
-
-    if (
-        typeof renderDividendStockChart === "function"
-    ) {
+    if (typeof renderDividendStockChart === "function") {
         renderDividendStockChart();
     }
 
-
-    if (
-        typeof renderDividendYearChart === "function"
-    ) {
+    if (typeof renderDividendYearChart === "function") {
         renderDividendYearChart();
     }
-
 }
 function renderDividendKPI(){
 
