@@ -1055,13 +1055,13 @@ row.innerHTML = `
     const dataMap = (currentMonitorView === 'stock') ? portfolio : sectorPortfolio;
     const pnLMap = (currentMonitorView === 'stock') ? realizedPnL : sectorPnL;
 
-    renderMonitorTable(dataMap, pnLMap);
-    drawAllocationChart(currentMonitorView);
-    ();
-    renderDividendHistory();
-    renderDividendKPI();
-    renderAlertSummary(generatePortfolioAlerts());
+renderMonitorTable(dataMap, pnLMap);
+drawAllocationChart(currentMonitorView);
 
+renderDividendTable();
+renderDividendHistory();
+renderDividendKPI();
+renderAlertSummary(generatePortfolioAlerts());
 }
 
 function loadMore() {
