@@ -1593,7 +1593,7 @@ globalTradesData.forEach(t => {
         if (year > 0 && d.getFullYear() !== year) return;
         if (month > 0 && (d.getMonth() + 1) !== month) return;
 
-        const sym = String(t.symbol).toUpperCase();
+     
 
 if (!result[sym]) {
     result[sym] = {
