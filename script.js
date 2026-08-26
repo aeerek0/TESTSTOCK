@@ -1555,6 +1555,11 @@ function renderDividendTable() {
 
     const year = Number(document.getElementById("dividendYear").value);
     const month = Number(document.getElementById("dividendMonth").value);
+    const stockFilter =
+    document.getElementById("dividendStockFilter")
+        ?.value
+        .trim()
+        .toUpperCase() || "";
 
     let result = {};
     let total = 0;
@@ -1562,10 +1567,22 @@ function renderDividendTable() {
     let allCount = 0;
     let allStock = {};
 
-    globalTradesData.forEach(t => {
-        if (String(t.type).trim() !== "ปันผล") return;
+globalTradesData.forEach(t => {
 
-        const amount = Number(t.netAmount) || 0;
+    if (String(t.type).trim() !== "ปันผล")
+        return;
+
+    const sym =
+        String(t.symbol || "")
+            .trim()
+            .toUpperCase();
+
+    // 🔍 Filter ตามชื่อหุ้น
+    if (stockFilter && !sym.includes(stockFilter))
+        return;
+
+    const amount =
+        Number(t.netAmount) || 0;
 
         allTotal += amount;
         allCount++;
