@@ -1969,45 +1969,23 @@ function renderDividendStockChart() {
     });
 
 
-    // เรียงจาก Dividend มาก → น้อย
+    // เรียง Dividend มาก → น้อย
     const sortedStocks = Object.entries(stockData)
         .sort(function(a, b) {
             return b[1] - a[1];
         });
 
 
-    // Top 10
+    // แสดงเฉพาะ Top 10
     const top10 = sortedStocks.slice(0, 10);
 
-    // หุ้นที่เหลือ
-    const otherStocks = sortedStocks.slice(10);
-
-    // รวมเงินหุ้นอื่นๆ
-    const otherAmount = otherStocks.reduce(
-        function(sum, item) {
-            return sum + item[1];
-        },
-        0
-    );
-
-
-    // เตรียมข้อมูลกราฟ
-    let labels = top10.map(function(item) {
+    const labels = top10.map(function(item) {
         return item[0];
     });
 
-    let values = top10.map(function(item) {
+    const values = top10.map(function(item) {
         return item[1];
     });
-
-
-    // เพิ่ม "อื่นๆ"
-    if (otherAmount > 0) {
-
-        labels.push("อื่นๆ");
-        values.push(otherAmount);
-
-    }
 
 
     const ctx = document.getElementById(
@@ -2027,7 +2005,7 @@ function renderDividendStockChart() {
 
     dividendStockChart = new Chart(ctx, {
 
-        type: "doughnut",
+        type: "bar",
 
         data: {
 
@@ -2035,7 +2013,7 @@ function renderDividendStockChart() {
 
             datasets: [{
 
-                label: "Dividend",
+                label: "Dividend (บาท)",
 
                 data: values
 
@@ -2043,50 +2021,21 @@ function renderDividendStockChart() {
 
         },
 
-        plugins: [ChartDataLabels],
 
         options: {
+
+            indexAxis: "y",
 
             responsive: true,
 
             maintainAspectRatio: false,
 
 
-            // =========================
-            // คลิกกราฟ
-            // =========================
-            onClick: function(event, elements) {
-
-                if (!elements || !elements.length) {
-                    return;
-                }
-
-                const index = elements[0].index;
-
-                const label = this.data.labels[index];
-
-                if (label === "อื่นๆ") {
-
-                    showOtherDividendStocks(
-                        otherStocks,
-                        values.reduce(function(sum, value) {
-                            return sum + value;
-                        }, 0)
-                    );
-
-                }
-
-            },
-
-
             plugins: {
 
                 legend: {
-
-                    position: "bottom"
-
+                    display: false
                 },
-
 
                 tooltip: {
 
@@ -2094,90 +2043,59 @@ function renderDividendStockChart() {
 
                         label: function(context) {
 
-                            const value = context.raw;
+                            const value =
+                                context.raw || 0;
 
                             const total =
-                                context.dataset.data.reduce(
-                                    function(sum, val) {
-                                        return sum + val;
-                                    },
-                                    0
-                                );
+                                Object.values(stockData)
+                                    .reduce(
+                                        function(sum, val) {
+                                            return sum + val;
+                                        },
+                                        0
+                                    );
 
                             const percent =
                                 total > 0
-                                    ? ((value / total) * 100).toFixed(2)
+                                    ? ((value / total) * 100)
+                                        .toFixed(2)
                                     : 0;
 
                             return [
-                                context.label,
-                                "เงินปันผล: " +
-                                    value.toLocaleString(
-                                        undefined,
-                                        {
-                                            minimumFractionDigits: 2
-                                        }
-                                    ) +
-                                    " บาท",
+                                "Dividend: " +
+                                value.toLocaleString(
+                                    undefined,
+                                    {
+                                        minimumFractionDigits: 2
+                                    }
+                                ) + " บาท",
+
                                 "สัดส่วน: " +
-                                    percent +
-                                    "%"
+                                percent + "%"
                             ];
 
                         }
 
                     }
 
-                },
+                }
+
+            },
 
 
-                datalabels: {
+            scales: {
 
-                    color: "#ffffff",
+                x: {
 
-                    formatter: function(value, context) {
+                    beginAtZero: true,
 
-                        const total =
-                            context.chart
-                                .data
-                                .datasets[0]
-                                .data
-                                .reduce(
-                                    function(sum, val) {
-                                        return sum + val;
-                                    },
-                                    0
-                                );
+                    ticks: {
 
-                        const percent =
-                            total > 0
-                                ? ((value / total) * 100).toFixed(1)
-                                : 0;
+                        callback: function(value) {
 
-                        if (percent < 3) {
-                            return "";
+                            return value.toLocaleString();
+
                         }
-
-                        return [
-                            context.chart.data.labels[
-                                context.dataIndex
-                            ],
-                            percent + "%",
-                            value.toLocaleString(
-                                undefined,
-                                {
-                                    maximumFractionDigits: 0
-                                }
-                            ) + " บาท"
-                        ];
-
-                    },
-
-                    font: {
-
-                        weight: "bold",
-
-                        size: 11
 
                     }
 
