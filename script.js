@@ -1915,10 +1915,10 @@ function renderDividendTable() {
 
 
     if (
-        typeof renderDividendStockChart ===
+        typeof  ===
         "function"
     ) {
-        renderDividendStockChart();
+        ();
     }
 
 
@@ -2542,8 +2542,8 @@ function renderDividendStockChart() {
         stockData[sym] =
             (stockData[sym] || 0) +
             (Number(t.netAmount) || 0);
-
     });
+
 
     // =========================
     // เรียงจากมาก → น้อย
@@ -2551,41 +2551,58 @@ function renderDividendStockChart() {
     const sortedStocks = Object.entries(stockData)
         .sort((a, b) => b[1] - a[1]);
 
+
     // =========================
     // Top 10
     // =========================
     const top10 = sortedStocks.slice(0, 10);
 
-    // =========================
-    // รวม "อื่นๆ"
-    // =========================
-    const otherAmount = sortedStocks
-        .slice(10)
-        .reduce((sum, item) => sum + item[1], 0);
 
+    // =========================
+    // หุ้นอื่นๆ
+    // =========================
+    const otherStocks = sortedStocks.slice(10);
+
+    const otherAmount = otherStocks.reduce(
+        (sum, item) => sum + item[1],
+        0
+    );
+
+
+    // =========================
+    // เตรียมข้อมูลกราฟ
+    // =========================
     let labels = top10.map(item => item[0]);
     let values = top10.map(item => item[1]);
 
+
     if (otherAmount > 0) {
+
         labels.push("อื่นๆ");
         values.push(otherAmount);
+
     }
+
 
     // =========================
     // Canvas
     // =========================
-    const ctx = document.getElementById("dividendStockChart");
+    const ctx = document.getElementById(
+        "dividendStockChart"
+    );
 
     if (!ctx)
         return;
+
 
     // ลบกราฟเก่า
     if (dividendStockChart) {
         dividendStockChart.destroy();
     }
 
+
     // =========================
-    // สร้าง Donut Chart
+    // สร้าง Donut
     // =========================
     dividendStockChart = new Chart(ctx, {
 
@@ -2613,6 +2630,33 @@ function renderDividendStockChart() {
 
             maintainAspectRatio: false,
 
+            // =========================
+            // คลิกบนกราฟ
+            // =========================
+            onClick: function(event, elements) {
+
+                if (!elements.length)
+                    return;
+
+                const index =
+                    elements[0].index;
+
+                const label =
+                    this.data.labels[index];
+
+                // ถ้าคลิก "อื่นๆ"
+                if (label === "อื่นๆ") {
+
+                    showOtherDividendStocks(
+                        otherStocks,
+                        otherAmount
+                    );
+
+                }
+
+            },
+
+
             plugins: {
 
                 legend: {
@@ -2621,33 +2665,41 @@ function renderDividendStockChart() {
 
                 },
 
+
                 tooltip: {
 
                     callbacks: {
 
                         label: function(context) {
 
-                            const value = context.raw;
+                            const value =
+                                context.raw;
 
                             const total =
-                                context.dataset.data
-                                    .reduce(
-                                        (sum, val) => sum + val,
-                                        0
-                                    );
+                                context.dataset.data.reduce(
+                                    (sum, val) => sum + val,
+                                    0
+                                );
 
                             const percent =
                                 total > 0
-                                    ? ((value / total) * 100).toFixed(2)
+                                    ? (
+                                        value /
+                                        total *
+                                        100
+                                    ).toFixed(2)
                                     : 0;
 
                             return [
                                 context.label,
 
                                 "เงินปันผล: " +
-                                value.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) +
+                                value.toLocaleString(
+                                    undefined,
+                                    {
+                                        minimumFractionDigits: 2
+                                    }
+                                ) +
                                 " บาท",
 
                                 "สัดส่วน: " +
@@ -2661,45 +2713,66 @@ function renderDividendStockChart() {
 
                 },
 
+
                 // =========================
-                // แสดง % + เงินบน Donut
+                // ข้อความบน Donut
                 // =========================
                 datalabels: {
 
                     color: "#ffffff",
 
-                    formatter: function(value, context) {
+                    formatter: function(
+                        value,
+                        context
+                    ) {
 
                         const total =
-                            context.chart.data.datasets[0].data
+                            context.chart
+                                .data
+                                .datasets[0]
+                                .data
                                 .reduce(
-                                    (sum, val) => sum + val,
+                                    (sum, val) =>
+                                        sum + val,
                                     0
                                 );
 
                         const percent =
                             total > 0
-                                ? ((value / total) * 100).toFixed(1)
+                                ? (
+                                    value /
+                                    total *
+                                    100
+                                ).toFixed(1)
                                 : 0;
 
-                        // ถ้าสัดส่วนน้อยมาก ไม่ต้องแสดงข้อความ
+                        // หุ้นที่มีสัดส่วนน้อย
+                        // ไม่แสดงข้อความเพื่อไม่ให้รก
                         if (percent < 3) {
                             return "";
                         }
 
                         return [
-                            context.chart.data.labels[
-                                context.dataIndex
-                            ],
+
+                            context.chart
+                                .data
+                                .labels[
+                                    context.dataIndex
+                                ],
 
                             percent + "%",
 
-                            value.toLocaleString(undefined, {
-                                maximumFractionDigits: 0
-                            }) + " บาท"
+                            value.toLocaleString(
+                                undefined,
+                                {
+                                    maximumFractionDigits: 0
+                                }
+                            ) + " บาท"
+
                         ];
 
                     },
+
 
                     font: {
 
