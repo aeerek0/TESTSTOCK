@@ -22,7 +22,7 @@ let dividendStockChart = null;
 let dividendYearChart = null;
 let chartFilter = "all";   // all | top10
 let currentAlerts = [];
-
+let dividendMonitorShowAll = false;
 
 // --- ฟังก์ชัน initConnection ที่ปรับปรุงให้เหมือนเวอร์ชันล่าสุด ---
 function initConnection() {
@@ -1706,26 +1706,31 @@ function renderDividendTable() {
     });
 
     // แสดงตาราง
-    rows.forEach(item => {
+// แสดง 10 รายการก่อน หรือทั้งหมดถ้ากดดูเพิ่มเติม
+const displayRows = dividendMonitorShowAll
+    ? rows
+    : rows.slice(0, 10);
 
-        const row = document.createElement("tr");
+displayRows.forEach(item => {
 
-        row.innerHTML = `
-            <td>${item.symbol}</td>
-            <td>${item.count}</td>
-            <td>${item.dpu.toFixed(2)}</td>
-            <td>${item.units.toLocaleString()}</td>
-            <td>${item.amount.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            })}</td>
-            <td>${item.cost.toLocaleString(undefined, {
-                minimumFractionDigits: 2
-            })}</td>
-            <td>${item.yield.toFixed(2)}%</td>
-        `;
+    const row = document.createElement("tr");
 
-        tbody.appendChild(row);
-    });
+    row.innerHTML = `
+        <td>${item.symbol}</td>
+        <td>${item.count}</td>
+        <td>${item.dpu.toFixed(2)}</td>
+        <td>${item.units.toLocaleString()}</td>
+        <td>${item.amount.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        })}</td>
+        <td>${item.cost.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+        })}</td>
+        <td>${item.yield.toFixed(2)}%</td>
+    `;
+
+    tbody.appendChild(row);
+});
 
     if (typeof renderDividendMonthlyChart === "function") {
         renderDividendMonthlyChart();
