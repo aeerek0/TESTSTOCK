@@ -2875,6 +2875,8 @@ dividendStockChart = new Chart(ctx, {
     }
 
 });
+
+    }
 function renderDividendYearChart(){
 
     let yearData = {};
