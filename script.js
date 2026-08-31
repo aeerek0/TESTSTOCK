@@ -2452,246 +2452,468 @@ function showDividendDetail(month, items, total){
     modal.show();
 
 }
+// ==========================================
+// Dividend Chart 1 : รายเดือน
+// ==========================================
 function renderDividendMonthlyChart() {
-    const year = Number(
-        document.getElementById("dividendYear").value
-    );
+
+    const canvas =
+        document.getElementById("dividendMonthlyChart");
+
+    if (!canvas) return;
+
+    const yearElement =
+        document.getElementById("dividendYear");
+
+    const year =
+        yearElement
+            ? Number(yearElement.value)
+            : 0;
 
     let monthly = [
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0
     ];
 
-    globalTradesData.forEach(t => {
-        if (String(t.type).trim() !== "ปันผล")
+    globalTradesData.forEach(function(t) {
+
+        if (String(t.type).trim() !== "ปันผล") {
             return;
+        }
 
-        const d = new Date(t.date);
+        const date = new Date(t.date);
 
-        if (year > 0 && d.getFullYear() !== year)
+        if (year > 0 &&
+            date.getFullYear() !== year) {
             return;
+        }
 
-        const month = d.getMonth();
-        monthly[month] += Number(t.netAmount) || 0;
+        const month =
+            date.getMonth();
+
+        monthly[month] +=
+            Number(t.netAmount) || 0;
     });
 
-    const ctx = document.getElementById("dividendMonthlyChart");
-    if (!ctx) return;
 
     // ลบกราฟเก่า
     if (dividendMonthlyChart) {
         dividendMonthlyChart.destroy();
     }
 
-    dividendMonthlyChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: [
-                "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
-                "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
-            ],
-            datasets: [{
-                label: "Dividend (บาท)",
-                data: monthly
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return value.toLocaleString();
+
+    dividendMonthlyChart =
+        new Chart(canvas, {
+
+            type: "bar",
+
+            data: {
+
+                labels: [
+                    "ม.ค.",
+                    "ก.พ.",
+                    "มี.ค.",
+                    "เม.ย.",
+                    "พ.ค.",
+                    "มิ.ย.",
+                    "ก.ค.",
+                    "ส.ค.",
+                    "ก.ย.",
+                    "ต.ค.",
+                    "พ.ย.",
+                    "ธ.ค."
+                ],
+
+                datasets: [{
+
+                    label: "Dividend (บาท)",
+
+                    data: monthly
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return Number(value)
+                                        .toLocaleString();
+
+                                }
+
                         }
+
                     }
+
                 }
+
             }
-        }
-    });
+
+        });
+
 }
 
+
+
+// ==========================================
+// Dividend Chart 2 : แยกตามหุ้น
+// Horizontal Bar Top 10
+// ==========================================
 function renderDividendStockChart() {
-    const year = Number(
-        document.getElementById("dividendYear").value
-    );
+
+    const canvas =
+        document.getElementById("dividendStockChart");
+
+    if (!canvas) return;
+
+
+    const yearElement =
+        document.getElementById("dividendYear");
+
+    const year =
+        yearElement
+            ? Number(yearElement.value)
+            : 0;
+
 
     let stockData = {};
 
-    globalTradesData.forEach(t => {
-        if (String(t.type).trim() !== "ปันผล")
+
+    // รวม Dividend ตามหุ้น
+    globalTradesData.forEach(function(t) {
+
+        if (String(t.type).trim() !== "ปันผล") {
             return;
-
-        const d = new Date(t.date);
-
-        if (year > 0 && d.getFullYear() !== year)
-            return;
-
-        const sym = String(t.symbol).toUpperCase();
-
-        if (!stockData[sym]) {
-            stockData[sym] = 0;
         }
 
-        stockData[sym] += Number(t.netAmount) || 0;
+
+        const date =
+            new Date(t.date);
+
+
+        if (year > 0 &&
+            date.getFullYear() !== year) {
+            return;
+        }
+
+
+        const symbol =
+            String(t.symbol || "")
+                .trim()
+                .toUpperCase();
+
+
+        if (!symbol) {
+            return;
+        }
+
+
+        const amount =
+            Number(t.netAmount) || 0;
+
+
+        stockData[symbol] =
+            (stockData[symbol] || 0)
+            + amount;
+
     });
 
-    const labels = Object.keys(stockData);
-    const values = Object.values(stockData);
 
-    const ctx = document.getElementById("dividendStockChart");
-    if (!ctx) return;
+    // เรียงจาก Dividend มาก → น้อย
+    const sortedStocks =
+        Object.entries(stockData)
+            .sort(function(a, b) {
+
+                return b[1] - a[1];
+
+            });
+
+
+    // เอา Top 10
+    const top10 =
+        sortedStocks.slice(0, 10);
+
+
+    const labels =
+        top10.map(function(item) {
+
+            return item[0];
+
+        });
+
+
+    const values =
+        top10.map(function(item) {
+
+            return item[1];
+
+        });
+
 
     // ลบกราฟเก่า
     if (dividendStockChart) {
+
         dividendStockChart.destroy();
+
     }
 
-    dividendStockChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Dividend",
-                data: values
-            }]
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: "bottom"
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const value = context.raw;
-                            const total = context.dataset.data
-                                .reduce((sum, val) => sum + val, 0);
 
-                            const percent = total > 0
-                                ? ((value / total) * 100).toFixed(2)
-                                : 0;
+    // สร้าง Horizontal Bar
+    dividendStockChart =
+        new Chart(canvas, {
 
-                            return [
-                                context.label,
-                                value.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) + " บาท",
-                                percent + "%"
-                            ];
-                        }
-                    }
-                },
-                datalabels: {
-                    color: "#ffffff",
-                    formatter: function(value, context) {
-                        const total = context.chart.data.datasets[0].data
-                            .reduce((sum, val) => sum + val, 0);
+            type: "bar",
 
-                        const percent = total > 0
-                            ? ((value / total) * 100).toFixed(1)
-                            : 0;
+            data: {
 
-                        return [
-                            context.chart.data.labels[context.dataIndex],
-                            percent + "%"
-                        ];
+                labels: labels,
+
+                datasets: [{
+
+                    label: "Dividend (บาท)",
+
+                    data: values
+
+                }]
+
+            },
+
+
+            options: {
+
+                indexAxis: "y",
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
                     },
-                    font: {
-                        weight: "bold",
-                        size: 12
+
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label:
+                                function(context) {
+
+                                    const value =
+                                        Number(context.raw)
+                                        || 0;
+
+
+                                    const total =
+                                        values.reduce(
+                                            function(sum, val) {
+
+                                                return sum + val;
+
+                                            },
+                                            0
+                                        );
+
+
+                                    const percent =
+                                        total > 0
+                                            ? (
+                                                value /
+                                                total *
+                                                100
+                                            ).toFixed(2)
+                                            : "0.00";
+
+
+                                    return [
+
+                                        "💰 เงินปันผล: " +
+                                        value.toLocaleString(
+                                            undefined,
+                                            {
+                                                minimumFractionDigits: 2
+                                            }
+                                        ) +
+                                        " บาท",
+
+                                        "📊 สัดส่วน: " +
+                                        percent +
+                                        "%"
+
+                                    ];
+
+                                }
+
+                        }
+
                     }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return Number(value)
+                                        .toLocaleString();
+
+                                }
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        ticks: {
+
+                            autoSkip: false
+
+                        }
+
+                    }
+
                 }
+
             }
-        }
-    });
+
+        });
+
 }
-function renderDividendYearChart(){
+
+
+
+// ==========================================
+// Dividend Chart 3 : เปรียบเทียบรายปี
+// ==========================================
+function renderDividendYearChart() {
+
+    const canvas =
+        document.getElementById(
+            "dividendYearChart"
+        );
+
+    if (!canvas) return;
+
 
     let yearData = {};
 
 
-    globalTradesData.forEach(t=>{
+    globalTradesData.forEach(function(t) {
 
-        if(String(t.type).trim() !== "ปันผล")
+        if (String(t.type).trim() !== "ปันผล") {
             return;
-
-
-        const d = new Date(t.date);
-
-        const year = d.getFullYear() + 543;
-
-
-        if(!yearData[year]){
-            yearData[year] = 0;
         }
 
 
-        yearData[year] += Number(t.netAmount) || 0;
+        const date =
+            new Date(t.date);
+
+
+        const year =
+            date.getFullYear() + 543;
+
+
+        if (!yearData[year]) {
+
+            yearData[year] = 0;
+
+        }
+
+
+        yearData[year] +=
+            Number(t.netAmount) || 0;
 
     });
 
 
+    const labels =
+        Object.keys(yearData)
+            .sort(function(a, b) {
 
-    const labels = Object.keys(yearData)
-        .sort((a,b)=>a-b);
+                return Number(a) - Number(b);
 
-
-    const values = labels.map(y=>yearData[y]);
-
-
-
-    const ctx = document.getElementById(
-        "dividendYearChart"
-    );
+            });
 
 
-    if(!ctx) return;
+    const values =
+        labels.map(function(year) {
+
+            return yearData[year];
+
+        });
 
 
+    // ลบกราฟเก่า
+    if (dividendYearChart) {
 
-    if(dividendYearChart){
         dividendYearChart.destroy();
+
     }
 
 
+    dividendYearChart =
+        new Chart(canvas, {
 
-    dividendYearChart = new Chart(ctx,{
+            type: "bar",
 
-        type:"bar",
+            data: {
 
-        data:{
+                labels: labels,
 
-            labels:labels,
+                datasets: [{
 
-            datasets:[{
+                    label: "Dividend (บาท)",
 
-                label:"Dividend (บาท)",
+                    data: values
 
-                data:values
+                }]
 
-            }]
-
-        },
+            },
 
 
-        options:{
+            options: {
 
-            responsive:true,
+                responsive: true,
 
-            maintainAspectRatio:false,
+                maintainAspectRatio: false,
 
-            animation:false
+                animation: false
 
-        }
+            }
 
-    });
+        });
 
 }
-
 function calculateDividendGrowth(){
 
     let yearly = {};
