@@ -2805,41 +2805,52 @@ function renderDividendStockChart() {
                     // ==================================
                     // ตัวเลขปลายแท่ง
                     // ==================================
-                    datalabels: {
+datalabels: {
 
-                        display: true,
+    display: true,
 
-                        anchor: "end",
+    anchor: "end",
 
-                        align: "right",
+    align: "right",
 
-                        offset: 5,
+    offset: 5,
 
-                        formatter:
-                            function (value) {
+    formatter: function (value, context) {
 
-                                return Number(value)
-                                    .toLocaleString(
-                                        undefined,
-                                        {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2
-                                        }
-                                    ) +
-                                    " บาท";
+        const total =
+            context.chart.data.datasets[0].data
+                .reduce(function (sum, val) {
+                    return sum + val;
+                }, 0);
 
-                            },
+        const percent =
+            total > 0
+                ? ((value / total) * 100).toFixed(2)
+                : "0.00";
 
-                        font: {
+        return [
+            Number(value).toLocaleString(
+                undefined,
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            ) + " บาท",
 
-                            weight: "bold",
+            "(" + percent + "%)"
+        ];
 
-                            size: 11
+    },
 
-                        }
+    font: {
 
-                    },
+        weight: "bold",
 
+        size: 11
+
+    }
+
+},
 
                     // ==================================
                     // Tooltip
