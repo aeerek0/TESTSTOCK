@@ -2576,104 +2576,166 @@ function renderDividendMonthlyChart() {
 // ==========================================
 function renderDividendStockChart() {
 
-    const canvas =
-        document.getElementById("dividendStockChart");
-
-    if (!canvas) return;
-
-
+    // =========================
+    // เลือกปี
+    // =========================
     const yearElement =
         document.getElementById("dividendYear");
 
-    const year =
-        yearElement
-            ? Number(yearElement.value)
-            : 0;
+    const year = yearElement
+        ? Number(yearElement.value)
+        : 0;
 
 
-    let stockData = {};
-
-
+    // =========================
     // รวม Dividend ตามหุ้น
-    globalTradesData.forEach(function(t) {
+    // =========================
+    const stockData = {};
+
+    globalTradesData.forEach(function (t) {
 
         if (String(t.type).trim() !== "ปันผล") {
             return;
         }
 
+        const date = new Date(t.date);
 
-        const date =
-            new Date(t.date);
-
-
-        if (year > 0 &&
-            date.getFullYear() !== year) {
+        if (
+            year > 0 &&
+            date.getFullYear() !== year
+        ) {
             return;
         }
-
 
         const symbol =
             String(t.symbol || "")
                 .trim()
                 .toUpperCase();
 
-
         if (!symbol) {
             return;
         }
 
-
         const amount =
             Number(t.netAmount) || 0;
 
-
         stockData[symbol] =
-            (stockData[symbol] || 0)
-            + amount;
+            (stockData[symbol] || 0) + amount;
 
     });
 
 
-    // เรียงจาก Dividend มาก → น้อย
+    // =========================
+    // เรียง Dividend มาก → น้อย
+    // =========================
     const sortedStocks =
         Object.entries(stockData)
-            .sort(function(a, b) {
-
+            .sort(function (a, b) {
                 return b[1] - a[1];
-
             });
 
 
-    // เอา Top 10
+    // =========================
+    // Top 10
+    // =========================
     const top10 =
         sortedStocks.slice(0, 10);
 
 
+    // =========================
+    // หุ้นอื่นๆ
+    // =========================
+    const otherStocks =
+        sortedStocks.slice(10);
+
+
+    // เก็บไว้ให้ฟังก์ชันอื่นเรียกใช้
+    window.otherDividendStocks =
+        otherStocks;
+
+
+    // =========================
+    // รวมเงิน "อื่นๆ"
+    // =========================
+    const otherAmount =
+        otherStocks.reduce(
+            function (sum, item) {
+                return sum + item[1];
+            },
+            0
+        );
+
+
+    // =========================
+    // Labels
+    // =========================
     const labels =
-        top10.map(function(item) {
-
+        top10.map(function (item) {
             return item[0];
-
         });
 
 
     const values =
-        top10.map(function(item) {
-
+        top10.map(function (item) {
             return item[1];
-
         });
 
 
-    // ลบกราฟเก่า
-    if (dividendStockChart) {
+    // เพิ่ม "อื่นๆ"
+    if (otherAmount > 0) {
 
-        dividendStockChart.destroy();
+        labels.push("อื่นๆ");
+
+        values.push(otherAmount);
 
     }
 
 
+    // =========================
+    // Canvas
+    // =========================
+    const canvas =
+        document.getElementById(
+            "dividendStockChart"
+        );
+
+    if (!canvas) {
+        return;
+    }
+
+
+    // =========================
+    // ลบกราฟเก่า
+    // =========================
+    if (dividendStockChart) {
+
+        dividendStockChart.destroy();
+
+        dividendStockChart = null;
+
+    }
+
+
+    if (labels.length === 0) {
+        return;
+    }
+
+
+    // =========================
+    // รวมทั้งหมด
+    // =========================
+    const total =
+        values.reduce(
+            function (sum, value) {
+                return sum + value;
+            },
+            0
+        );
+
+
+    // =========================
     // สร้าง Horizontal Bar
+    // =========================
     dividendStockChart =
         new Chart(canvas, {
 
@@ -2703,36 +2765,111 @@ function renderDividendStockChart() {
                 maintainAspectRatio: false,
 
 
+                // =========================
+                // คลิก "อื่นๆ"
+                // =========================
+                onClick: function (
+                    event,
+                    elements
+                ) {
+
+                    if (
+                        !elements ||
+                        !elements.length
+                    ) {
+                        return;
+                    }
+
+                    const index =
+                        elements[0].index;
+
+                    const label =
+                        this.data.labels[index];
+
+                    if (
+                        label === "อื่นๆ" &&
+                        otherDividendStocks.length > 0
+                    ) {
+
+                        showOtherDividendStocks(
+                            otherDividendStocks,
+                            total
+                        );
+
+                    }
+
+                },
+
+
                 plugins: {
 
                     legend: {
-
                         display: false
+                    },
+
+
+                    // =========================
+                    // ตัวเลขบนแท่ง
+                    // =========================
+                    datalabels: {
+
+                        anchor: "end",
+
+                        align: "end",
+
+                        formatter: function (
+                            value,
+                            context
+                        ) {
+
+                            const percent =
+                                total > 0
+                                    ? (
+                                        value /
+                                        total *
+                                        100
+                                    ).toFixed(1)
+                                    : "0.0";
+
+
+                            return (
+                                value.toLocaleString(
+                                    undefined,
+                                    {
+                                        minimumFractionDigits: 2
+                                    }
+                                ) +
+                                " บาท (" +
+                                percent +
+                                "%)"
+                            );
+
+                        },
+
+                        font: {
+                            weight: "bold",
+                            size: 11
+                        }
 
                     },
 
 
+                    // =========================
+                    // Tooltip
+                    // =========================
                     tooltip: {
 
                         callbacks: {
 
                             label:
-                                function(context) {
+                                function (
+                                    context
+                                ) {
 
                                     const value =
-                                        Number(context.raw)
-                                        || 0;
-
-
-                                    const total =
-                                        values.reduce(
-                                            function(sum, val) {
-
-                                                return sum + val;
-
-                                            },
-                                            0
-                                        );
+                                        Number(
+                                            context.raw
+                                        ) || 0;
 
 
                                     const percent =
@@ -2747,7 +2884,7 @@ function renderDividendStockChart() {
 
                                     return [
 
-                                        "💰 เงินปันผล: " +
+                                        "💰 " +
                                         value.toLocaleString(
                                             undefined,
                                             {
@@ -2756,7 +2893,7 @@ function renderDividendStockChart() {
                                         ) +
                                         " บาท",
 
-                                        "📊 สัดส่วน: " +
+                                        "📊 " +
                                         percent +
                                         "%"
 
@@ -2771,6 +2908,9 @@ function renderDividendStockChart() {
                 },
 
 
+                // =========================
+                // แกน X / Y
+                // =========================
                 scales: {
 
                     x: {
@@ -2780,10 +2920,11 @@ function renderDividendStockChart() {
                         ticks: {
 
                             callback:
-                                function(value) {
+                                function (value) {
 
-                                    return Number(value)
-                                        .toLocaleString();
+                                    return Number(
+                                        value
+                                    ).toLocaleString();
 
                                 }
 
@@ -2809,7 +2950,6 @@ function renderDividendStockChart() {
         });
 
 }
-
 
 
 // ==========================================
@@ -3309,6 +3449,114 @@ function toggleDividendMonitor() {
     dividendMonitorShowAll = !dividendMonitorShowAll;
 
     renderDividendTable();
+
+}
+
+function showOtherDividendStocks(
+    stocks,
+    total
+) {
+
+    const modalElement =
+        document.getElementById(
+            "dividendDetailModal"
+        );
+
+    const modalTitle =
+        document.getElementById(
+            "dividendModalTitle"
+        );
+
+    const modalBody =
+        document.getElementById(
+            "dividendModalBody"
+        );
+
+
+    if (
+        !modalElement ||
+        !modalTitle ||
+        !modalBody
+    ) {
+        return;
+    }
+
+
+    modalTitle.innerText =
+        "📊 Dividend หุ้นอื่นๆ";
+
+
+    let html = "";
+
+
+    stocks.forEach(function (item) {
+
+        const symbol = item[0];
+
+        const amount = Number(item[1]) || 0;
+
+        const percent =
+            total > 0
+                ? (
+                    amount /
+                    total *
+                    100
+                ).toFixed(2)
+                : "0.00";
+
+
+        html += `
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+
+                <div>
+                    <strong>${symbol}</strong>
+                </div>
+
+                <div class="text-end">
+
+                    <div>
+                        ${amount.toLocaleString(
+                            undefined,
+                            {
+                                minimumFractionDigits: 2
+                            }
+                        )} บาท
+                    </div>
+
+                    <small class="text-muted">
+                        ${percent}%
+                    </small>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    html += `
+        <hr>
+
+        <div class="text-end fw-bold">
+
+            รวม ${stocks.length} หุ้น
+
+        </div>
+    `;
+
+
+    modalBody.innerHTML = html;
+
+
+    const modal =
+        new bootstrap.Modal(
+            modalElement
+        );
+
+    modal.show();
 
 }
 
