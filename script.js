@@ -3698,6 +3698,16 @@ function showOtherDividendStocks(
     modal.show();
 
 }
+// ==========================================================
+// เมื่อพิมพ์ชื่อหุ้น → หา Sector อัตโนมัติ
+// ==========================================================
+
+document
+    .getElementById("symbol")
+    ?.addEventListener(
+        "input",
+        updateSectorFromSymbol
+    );
 
 
 
