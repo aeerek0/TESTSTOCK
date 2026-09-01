@@ -209,7 +209,7 @@ const masterSectorList = [
     "STEEL",
     "CONMAT",
     "CONS",
-    "PF&REITs",
+    "PF&REIT",
     "PROP",
     "ENERG",
     "MINE",
