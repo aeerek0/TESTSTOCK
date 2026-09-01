@@ -401,6 +401,32 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 });
+
+function updateSectorFromSymbol() {
+
+    const symbolInput =
+        document.getElementById("symbol");
+
+    const sectorInput =
+        document.getElementById("sector");
+
+    if (!symbolInput || !sectorInput)
+        return;
+
+    const symbol =
+        symbolInput.value
+            .trim()
+            .toUpperCase();
+
+    symbolInput.value = symbol;
+
+    const sector =
+        getStockSector(symbol);
+
+    sectorInput.value =
+        sector;
+
+}
 function updateMonitor(view) {
     currentMonitorView = view;
     const dataMap = (view === 'stock') ? portfolio : sectorPortfolio;
